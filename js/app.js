@@ -26,9 +26,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
   if (state.babyBirthDate) calculateAgeGroup();
 
-  // Onboarding
-  if (!state.onboarded) {
-    document.getElementById('app-onboarding')?.classList.add('show');
+  // Onboarding — ilk girişte göster
+  const ob = document.getElementById('app-onboarding');
+  if (ob) {
+    if (!state.onboarded) {
+      ob.classList.add('show');
+      ob.style.removeProperty('display');
+    } else {
+      ob.classList.remove('show');
+    }
   }
 
   // Lazy sayfalar için ilk render flag
