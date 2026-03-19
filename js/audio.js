@@ -71,39 +71,42 @@ window.updatePlayUI = function(id, cardPfx, btnPfx, playing) {
 
 /* ── Ninni çal — toggle destekli ────────────────────────────── */
 window.playLullaby = async function(id) {
-  // Çift tetiklenmeyi önle
-  if (state._playLock) return;
-  if (state.currentTrack === id && state.isPlaying) {
-    state._playLock = true;
-    await stopAll();
-    state._playLock = false;
-    return;
-  }
+  const wasPlaying = state.isPlaying;
+  const wasId = state.currentTrack;
+  
+  // Her durumda önce durdur
+  await stopAll();
+  
+  // Aynı ninniyse sadece durdur (toggle)
+  if (wasPlaying && wasId === id) return;
+  
   const lullaby = getActiveLullabies().find(l => l.id === id);
   if (!lullaby) return;
-  state._playLock = true;
-  await stopAll();
-  state._playLock = false;
+  
   state.currentTrack = id;
   state.isPlaying = true;
   updatePlayUI(id, 'card-', 'btn-', true);
   showNowPlaying('ninniler', lullaby.emoji, lullaby.name, t('playing'));
+  
   if (lullaby.file) {
     const audio = new Audio(audioSrc(lullaby.file));
     state.currentAudio = audio;
     audio.onended = () => {
       updatePlayUI(id, 'card-', 'btn-', false);
       document.querySelectorAll('.now-playing').forEach(n => n.classList.remove('show'));
-      state.isPlaying = false; state.currentTrack = null;
+      state.isPlaying = false;
+      state.currentTrack = null;
     };
     audio.onerror = () => {
       updatePlayUI(id, 'card-', 'btn-', false);
-      state.isPlaying = false; state.currentTrack = null;
+      state.isPlaying = false;
+      state.currentTrack = null;
       document.querySelectorAll('.now-playing').forEach(n => n.classList.remove('show'));
     };
     try { await audio.play(); } catch(e) {
       updatePlayUI(id, 'card-', 'btn-', false);
-      state.isPlaying = false; state.currentTrack = null;
+      state.isPlaying = false;
+      state.currentTrack = null;
     }
     return;
   }
@@ -111,25 +114,27 @@ window.playLullaby = async function(id) {
   catch(e) { fallbackTTS(injectBabyName(lullaby.text)); }
 };
 
-window.playStory = async function(id) {
-  if (state.currentTrack === 's'+id && state.isPlaying) {
-    await stopAll();
-    return;
-  }
 
+window.playStory = async function(id) {
+  const wasPlaying = state.isPlaying;
+  const wasId = state.currentTrack;
+  
+  await stopAll();
+  
+  if (wasPlaying && wasId === 's'+id) return;
+  
   const story = getActiveStories().find(s => s.id === id);
   if (!story) return;
-
-  await stopAll(); // Önce her şeyi durdur
+  
   state.currentTrack = 's'+id;
   state.isPlaying = true;
   showNowPlaying('hikayeler', story.emoji, story.title, t('storyPlaying'));
-
+  
   const prefix = state.babyName
     ? state.babyName + ', ' + (state.language==='tr' ? 'sana bir masal anlatacağım. ' : 'I will tell you a bedtime story. ')
     : (state.language==='tr' ? 'Tatlım, sana bir masal anlatacağım. ' : 'Sweetheart, I will tell you a bedtime story. ');
   const text = prefix + story.text;
-
+  
   if (story.file) {
     const audio = new Audio(audioSrc(story.file));
     state.currentAudio = audio;
@@ -144,35 +149,31 @@ window.playStory = async function(id) {
   catch(e) { fallbackTTS(text); }
 };
 
-/* ── Kolik çal — toggle destekli ────────────────────────────── */
-window.playKolik = async function(id) {
-  if (state._playLock) return;
-  if (state.currentTrack === id && state.isPlaying) {
-    state._playLock = true;
-    await stopAll();
-    state._playLock = false;
-    return;
-  }
-  state._playLock = true;
-  await stopAll();
-  state._playLock = false;
 
-  const all  = [...KOLIK_SOUNDS.beyaz, ...KOLIK_SOUNDS.doga, ...KOLIK_SOUNDS.rahat];
+window.playKolik = async function(id) {
+  const wasPlaying = state.isPlaying;
+  const wasId = state.currentTrack;
+  
+  await stopAll();
+  
+  if (wasPlaying && wasId === id) return;
+  
+  const all = [...KOLIK_SOUNDS.beyaz, ...KOLIK_SOUNDS.doga, ...KOLIK_SOUNDS.rahat];
   const item = all.find(s => s.id === id);
   if (!item) return;
-
-  const loc  = state.language === 'tr' ? KOLIK_TR[id] : KOLIK_EN[id];
+  
+  const loc = state.language === 'tr' ? KOLIK_TR[id] : KOLIK_EN[id];
   const name = loc ? loc.name : item.name;
-
+  
   state.currentTrack = id;
   state.isPlaying = true;
-
+  
   const kitem = document.getElementById('kitem-'+id);
   const kbtn  = document.getElementById('kbtn-'+id);
   if (kitem) kitem.classList.add('playing');
   if (kbtn)  { kbtn.innerHTML = '⏸'; kbtn.classList.add('playing'); }
   showNowPlaying('kolik', item.emoji, name, t('playing'));
-
+  
   if (item.file) {
     const audio = new Audio(audioSrc(item.file));
     state.currentAudio = audio;
@@ -183,7 +184,7 @@ window.playKolik = async function(id) {
   generateKolikSound(id);
 };
 
-/* ── İsim enjeksiyonu ────────────────────────────────────────── */
+
 window.injectBabyName = function(text) {
   if (!state.babyName || !text) return text;
   return text

@@ -288,6 +288,12 @@ window.updateLanguageUI = function() {
   const ageArr = t('ageOptions');
   document.querySelectorAll('.age-option').forEach((o,i) => { if (ageArr[i]) o.textContent = ageArr[i]; });
 
+  // Timer seçenekleri (dk/min)
+  const minLabel = state.language === 'tr' ? ' dk' : ' min';
+  document.querySelectorAll('.timer-option[data-min]').forEach(el => {
+    el.textContent = el.getAttribute('data-min') + minLabel;
+  });
+
   // Mini timer label
   const miniLabel = document.querySelector('.mini-label');
   if (miniLabel) miniLabel.textContent = isTR ? ' sonra kapanacak' : ' until stop';

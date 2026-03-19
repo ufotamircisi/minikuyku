@@ -56,8 +56,7 @@ window.state = {
   cryAnalysisHistory: JSON.parse(localStorage.getItem('minikuyku_cry_analysis_history') || '[]'),
 
   // Lazy init takibi
-  _initializedPages: { ninniler: false },
-  _playLock: false
+  _initializedPages: { ninniler: false }
 };
 
 /* ── Yardımcı kayıt fonksiyonları ───────────────────────────── */
