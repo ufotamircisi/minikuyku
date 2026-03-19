@@ -249,6 +249,8 @@ window.updateLanguageUI = function() {
   _st('voice-section-title',     t('sectionVoiceLullabies'));
   _st('stories-section-title',   t('sectionStories'));
   _st('whitenoise-section-title',t('sectionWhiteNoise'));
+  const kolikFreeBadge = document.getElementById('kolik-free-badge');
+  if (kolikFreeBadge) kolikFreeBadge.textContent = t('free');
   _st('nature-section-title',    t('sectionNature'));
   _st('relax-section-title',     t('sectionRelaxing'));
   _st('todaystats-section-title',t('sectionTodayStats'));

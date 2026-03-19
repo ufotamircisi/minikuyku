@@ -71,43 +71,37 @@ window.updatePlayUI = function(id, cardPfx, btnPfx, playing) {
 
 /* ── Ninni çal — toggle destekli ────────────────────────────── */
 window.playLullaby = async function(id) {
-  // Aynı ninniye tekrar basılınca durdur
-  if (state.currentTrack === id && state.isPlaying) {
-    await stopAll();
-    return;
-  }
-
+  if (state.currentTrack === id && state.isPlaying) { await stopAll(); return; }
   const lullaby = getActiveLullabies().find(l => l.id === id);
   if (!lullaby) return;
-
   await stopAll();
   state.currentTrack = id;
   state.isPlaying = true;
   updatePlayUI(id, 'card-', 'btn-', true);
   showNowPlaying('ninniler', lullaby.emoji, lullaby.name, t('playing'));
-
   if (lullaby.file) {
     const audio = new Audio(audioSrc(lullaby.file));
     state.currentAudio = audio;
     audio.onended = () => {
       updatePlayUI(id, 'card-', 'btn-', false);
       document.querySelectorAll('.now-playing').forEach(n => n.classList.remove('show'));
-      state.isPlaying = false;
-      state.currentTrack = null;
+      state.isPlaying = false; state.currentTrack = null;
     };
     audio.onerror = () => {
-      // MP3 bulunamazsa TTS ile çal
-      fallbackTTS(injectBabyName(lullaby.text));
+      updatePlayUI(id, 'card-', 'btn-', false);
+      state.isPlaying = false; state.currentTrack = null;
+      document.querySelectorAll('.now-playing').forEach(n => n.classList.remove('show'));
     };
-    try { await audio.play(); } catch(e) { fallbackTTS(injectBabyName(lullaby.text)); }
+    try { await audio.play(); } catch(e) {
+      updatePlayUI(id, 'card-', 'btn-', false);
+      state.isPlaying = false; state.currentTrack = null;
+    }
     return;
   }
-  // MP3 yoksa TTS
   try { await generateSpeech(injectBabyName(lullaby.text), id, 'ninniler'); }
   catch(e) { fallbackTTS(injectBabyName(lullaby.text)); }
 };
 
-/* ── Hikaye çal — toggle destekli ───────────────────────────── */
 window.playStory = async function(id) {
   if (state.currentTrack === 's'+id && state.isPlaying) {
     await stopAll();
@@ -117,7 +111,7 @@ window.playStory = async function(id) {
   const story = getActiveStories().find(s => s.id === id);
   if (!story) return;
 
-  await stopAll();
+  await stopAll(); // Önce her şeyi durdur
   state.currentTrack = 's'+id;
   state.isPlaying = true;
   showNowPlaying('hikayeler', story.emoji, story.title, t('storyPlaying'));
