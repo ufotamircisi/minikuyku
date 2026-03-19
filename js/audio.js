@@ -71,10 +71,19 @@ window.updatePlayUI = function(id, cardPfx, btnPfx, playing) {
 
 /* ── Ninni çal — toggle destekli ────────────────────────────── */
 window.playLullaby = async function(id) {
-  if (state.currentTrack === id && state.isPlaying) { await stopAll(); return; }
+  // Çift tetiklenmeyi önle
+  if (state._playLock) return;
+  if (state.currentTrack === id && state.isPlaying) {
+    state._playLock = true;
+    await stopAll();
+    state._playLock = false;
+    return;
+  }
   const lullaby = getActiveLullabies().find(l => l.id === id);
   if (!lullaby) return;
+  state._playLock = true;
   await stopAll();
+  state._playLock = false;
   state.currentTrack = id;
   state.isPlaying = true;
   updatePlayUI(id, 'card-', 'btn-', true);
@@ -137,11 +146,16 @@ window.playStory = async function(id) {
 
 /* ── Kolik çal — toggle destekli ────────────────────────────── */
 window.playKolik = async function(id) {
+  if (state._playLock) return;
   if (state.currentTrack === id && state.isPlaying) {
+    state._playLock = true;
     await stopAll();
+    state._playLock = false;
     return;
   }
+  state._playLock = true;
   await stopAll();
+  state._playLock = false;
 
   const all  = [...KOLIK_SOUNDS.beyaz, ...KOLIK_SOUNDS.doga, ...KOLIK_SOUNDS.rahat];
   const item = all.find(s => s.id === id);

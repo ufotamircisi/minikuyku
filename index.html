@@ -127,7 +127,7 @@
           <span class="badge badge-loop">🔁 Döngü</span>
           <span class="badge badge-timer" id="np-timer" style="display:none">⏱ 1dk</span>
         </div>
-        <button class="np-stop" onclick="stopAll()" type="button">⏹</button>
+        <button class="np-stop" onclick="event.stopPropagation();stopAll()" type="button">⏹</button>
       </div>
       <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
     </div>
@@ -155,7 +155,7 @@
         <div class="np-badges">
           <span class="badge badge-premium" id="hikayeler-badge">Deneme</span>
         </div>
-        <button class="np-stop" onclick="stopAll()" type="button">⏹</button>
+        <button class="np-stop" onclick="event.stopPropagation();stopAll()" type="button">⏹</button>
       </div>
       <div class="progress-bar"><div class="progress-fill" id="progress-hik-fill"></div></div>
     </div>
@@ -175,7 +175,7 @@
           <div class="np-title" id="np-kol-title">—</div>
           <div class="np-subtitle" id="np-kol-subtitle">Sınırsız · Ücretsiz</div>
         </div>
-        <button class="np-stop" onclick="stopAll()" type="button">⏹</button>
+        <button class="np-stop" onclick="event.stopPropagation();stopAll()" type="button">⏹</button>
       </div>
       <div class="progress-bar"><div class="progress-fill" id="progress-kol-fill"></div></div>
     </div>
