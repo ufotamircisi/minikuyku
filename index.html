@@ -97,21 +97,7 @@
       <div class="soft-note">Bu sonuçlar tıbbi teşhis değildir. Açlık, gaz, uykusuzluk, alt ıslaklığı veya kaka rahatsızlığı için fikir vermek üzere tasarlanmıştır.</div>
     </div>
 
-    <div class="now-playing" id="np-ninniler">
-      <div class="np-header">
-        <span class="np-icon" id="np-icon">🎵</span>
-        <div class="np-info">
-          <div class="np-title" id="np-title">—</div>
-          <div class="np-subtitle" id="np-subtitle">Hazır</div>
-        </div>
-        <div class="np-badges">
-          <span class="badge badge-loop">🔁 Döngü</span>
-          <span class="badge badge-timer" id="np-timer" style="display:none">⏱ 1dk</span>
-        </div>
-        <button class="np-stop" onclick="stopAll()" type="button">⏹</button>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-    </div>
+
 
     <div class="timer-section">
       <button class="timer-btn" onclick="toggleTimer()" type="button">⏱ Zamanlayıcı</button>
@@ -128,6 +114,22 @@
         <div class="timer-option" onclick="setTimer(90,this)">90 dk</div>
         <div class="timer-option" onclick="setTimer(120,this)">120 dk</div>
       </div>
+    </div>
+
+    <div class="now-playing" id="np-ninniler">
+      <div class="np-header">
+        <span class="np-icon" id="np-icon">🎵</span>
+        <div class="np-info">
+          <div class="np-title" id="np-title">—</div>
+          <div class="np-subtitle" id="np-subtitle">Hazır</div>
+        </div>
+        <div class="np-badges">
+          <span class="badge badge-loop">🔁 Döngü</span>
+          <span class="badge badge-timer" id="np-timer" style="display:none">⏱ 1dk</span>
+        </div>
+        <button class="np-stop" onclick="stopAll()" type="button">⏹</button>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
     </div>
 
     <div class="section-title" id="lullaby-section-title">Türk Ninnileri <span class="premium-badge" id="ninniler-badge">Deneme</span></div>
