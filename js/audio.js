@@ -84,13 +84,27 @@ window.playLullaby = async function(id) {
       state.isPlaying = false; state.currentTrack = null;
       document.querySelectorAll('.now-playing').forEach(n => n.classList.remove('show'));
     };
-    try { await audio.play(); } catch(e) {
+    try {
+      await audio.play();
+      // Premium değilse 1 dakika sonra durdur
+      if (!hasAccess()) {
+        state._previewTimer = setTimeout(() => {
+          stopAll();
+          showPremiumPrompt();
+        }, 60000);
+      }
+    } catch(e) {
       updatePlayUI(id, 'card-', 'btn-', false);
       state.isPlaying = false; state.currentTrack = null;
     }
     return;
   }
-  try { await generateSpeech(injectBabyName(lullaby.text), id, 'ninniler'); }
+  try {
+    await generateSpeech(injectBabyName(lullaby.text), id, 'ninniler');
+    if (!hasAccess()) {
+      state._previewTimer = setTimeout(() => { stopAll(); showPremiumPrompt(); }, 60000);
+    }
+  }
   catch(e) { fallbackTTS(injectBabyName(lullaby.text)); }
 };
 
@@ -120,10 +134,20 @@ window.playStory = async function(id) {
       document.querySelectorAll('.now-playing').forEach(n => n.classList.remove('show'));
       state.isPlaying = false; state.currentTrack = null;
     };
-    try { await audio.play(); } catch(e) { fallbackTTS(text); }
+    try {
+      await audio.play();
+      if (!hasAccess()) {
+        state._previewTimer = setTimeout(() => { stopAll(); showPremiumPrompt(); }, 60000);
+      }
+    } catch(e) { fallbackTTS(text); }
     return;
   }
-  try { await generateSpeech(text, 's'+id, 'hikayeler'); }
+  try {
+    await generateSpeech(text, 's'+id, 'hikayeler');
+    if (!hasAccess()) {
+      state._previewTimer = setTimeout(() => { stopAll(); showPremiumPrompt(); }, 60000);
+    }
+  }
   catch(e) { fallbackTTS(text); }
 };
 
@@ -297,6 +321,7 @@ function animateWaveform() {
 
 /* ── Ses klonlama ────────────────────────────────────────────── */
 window.cloneVoice = async function() {
+  if (!hasAccess()) { showPremiumPrompt(); return; }
   const sel=document.getElementById('clone-select');
   const name=document.getElementById('clone-name')?.value?.trim()||(state.language==='tr'?'Annenin Sesi':'My Voice');
   if (!sel||!sel.value){showStatus('clone-status','error',state.language==='tr'?'Lütfen bir kayıt seçin':'Please select a recording');return;}
@@ -411,6 +436,7 @@ function _pispis(dest){
    AĞLAMA ANALİZİ
    ════════════════════════════════════════════════════════════════ */
 window.startCryAnalysis = async function() {
+  if (!hasAccess()) { showPremiumPrompt(); return; }
   const btn=document.getElementById('cry-analysis-btn');
   const result=document.getElementById('cry-analysis-result');
   if(!btn||!result) return;
@@ -485,6 +511,7 @@ window.cancelTimer = function() {
 
 /* ── Dedektörler ─────────────────────────────────────────────── */
 window.toggleCryDetector = async function() {
+  if (!hasAccess()) { showPremiumPrompt(); return; }
   const btn=document.getElementById('cry-detector-btn');
   if(state.cryDetector.active){_stopDet('cryDetector');if(btn)btn.classList.remove('active');return;}
   try {
@@ -515,6 +542,7 @@ window.toggleCryDetector = async function() {
 };
 
 window.toggleKolikDetector = async function() {
+  if (!hasAccess()) { showPremiumPrompt(); return; }
   const btn=document.getElementById('kolik-detector-btn');
   if(state.kolikDetector.active){_stopDet('kolikDetector');if(btn)btn.classList.remove('active');return;}
   try {
