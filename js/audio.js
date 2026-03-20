@@ -9,18 +9,16 @@ function averageArray(arr) {
 }
 
 /* ── Tümünü durdur ───────────────────────────────────────────── */
-window.stopAll = async function() {
+window.stopAll = function() {
+  // Sync stop — tüm sesi anında durdur
   try {
     if (state.currentAudio) {
       state.currentAudio.pause();
       state.currentAudio.currentTime = 0;
-      state.currentAudio.src = '';
       state.currentAudio = null;
     }
     if (state.audioElement) {
       state.audioElement.pause();
-      state.audioElement.currentTime = 0;
-      state.audioElement.src = '';
       state.audioElement = null;
     }
   } catch(e) {}
@@ -30,7 +28,7 @@ window.stopAll = async function() {
     state.audioNodes = [];
   }
   if (state.audioContext) {
-    try { await state.audioContext.close(); } catch(e) {}
+    try { state.audioContext.close(); } catch(e) {}
     state.audioContext = null;
   }
   if (window.speechSynthesis) window.speechSynthesis.cancel();
@@ -72,15 +70,15 @@ window.updatePlayUI = function(id, cardPfx, btnPfx, playing) {
 /* ── Ninni çal ───────────────────────────────────────────────── */
 let _lastLullabyCall = 0;
 window.playLullaby = async function(id) {
-  // 300ms debounce — çift tıklamayı önle
+  // 400ms debounce — çift tıklamayı önle
   const now = Date.now();
-  if (now - _lastLullabyCall < 300) return;
+  if (now - _lastLullabyCall < 400) return;
   _lastLullabyCall = now;
 
   const wasPlaying = state.isPlaying;
   const wasId      = state.currentTrack;
 
-  await stopAll();
+  stopAll(); // sync — anında durur
 
   // Aynı ninni → toggle (sadece durdur)
   if (wasPlaying && wasId === id) return;
@@ -129,7 +127,7 @@ window.playStory = async function(id) {
   const wasPlaying = state.isPlaying;
   const wasId      = state.currentTrack;
 
-  await stopAll();
+  stopAll(); // sync
 
   if (wasPlaying && wasId === 's'+id) return;
 

@@ -263,6 +263,8 @@ window.updateLanguageUI = function() {
   _st('whitenoise-section-title',t('sectionWhiteNoise'));
   const kolikFreeBadge = document.getElementById('kolik-free-badge');
   if (kolikFreeBadge) kolikFreeBadge.textContent = t('free');
+  const vcFreeBadge = document.getElementById('voiceclone-free-badge');
+  if (vcFreeBadge) vcFreeBadge.textContent = t('free');
   _st('nature-section-title',    t('sectionNature'));
   _st('relax-section-title',     t('sectionRelaxing'));
   _st('todaystats-section-title',t('sectionTodayStats'));
@@ -290,6 +292,10 @@ window.updateLanguageUI = function() {
     const lbl = document.querySelector(['#stat-total','#stat-count','#stat-avg','#stat-wake'][i]+' + .stat-label');
     if (lbl) lbl.textContent = t(k);
   });
+
+  // Uyku listesi boş metin
+  const emptySleep = document.querySelector('#sleep-list .empty-text');
+  if (emptySleep) emptySleep.textContent = t('noSleepRecords');
 
   // Sesim
   const recStatus = document.getElementById('record-status');
