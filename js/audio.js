@@ -493,10 +493,23 @@ window.toggleCryDetector = async function() {
     const analyser=ctx.createAnalyser();analyser.fftSize=512;
     ctx.createMediaStreamSource(stream).connect(analyser);
     const data=new Uint8Array(analyser.frequencyBinCount);
+    let _cryDetected = false;
     state.cryDetector={active:true,stream,context:ctx,analyser,interval:setInterval(()=>{
       analyser.getByteFrequencyData(data);
-      if(averageArray(data)>40) showToast(state.language==='tr'?'🎙 Ağlama tespit edildi!':'🎙 Crying detected!');
-    },2000)};
+      // Bebek ağlaması: yüksek enerji + orta-yüksek frekans baskın
+      const avgAll = averageArray(data);
+      const avgMid = averageArray(data.slice(18,60));
+      const avgHigh = averageArray(data.slice(60,120));
+      const isCrying = avgAll > 35 && avgMid > 30 && avgHigh > 20;
+      if(isCrying && !_cryDetected && !state.isPlaying) {
+        _cryDetected = true;
+        showToast(state.language==='tr'?'🎙 Ağlama tespit edildi! Ninni başlatılıyor...':'🎙 Crying detected! Starting lullaby...');
+        // Dandini çal (l1)
+        setTimeout(()=>{ playLullaby('l1'); _cryDetected = false; }, 500);
+      } else if (!isCrying) {
+        _cryDetected = false;
+      }
+    },1500)};
     if(btn)btn.classList.add('active');
   } catch(e){alert(t('micRequired')+e.message);}
 };
@@ -510,10 +523,22 @@ window.toggleKolikDetector = async function() {
     const analyser=ctx.createAnalyser();analyser.fftSize=512;
     ctx.createMediaStreamSource(stream).connect(analyser);
     const data=new Uint8Array(analyser.frequencyBinCount);
+    let _kolikDetected = false;
     state.kolikDetector={active:true,stream,context:ctx,analyser,interval:setInterval(()=>{
       analyser.getByteFrequencyData(data);
-      if(averageArray(data.slice(60,120))>35) showToast(state.language==='tr'?'🌿 Kolik belirtisi tespit edildi!':'🌿 Colic pattern detected!');
-    },3000)};
+      // Kolik ağlaması: yüksek frekans baskın + sürekli yüksek enerji
+      const avgAll = averageArray(data);
+      const avgHigh = averageArray(data.slice(60,120));
+      const isKolik = avgAll > 40 && avgHigh > 35;
+      if(isKolik && !_kolikDetected && !state.isPlaying) {
+        _kolikDetected = true;
+        showToast(state.language==='tr'?'🌿 Kolik belirtisi! Beyaz gürültü başlatılıyor...':'🌿 Colic detected! Starting white noise...');
+        // Beyaz gürültü çal (b1 - saç kurutma / beyaz gürültü)
+        setTimeout(()=>{ playKolik('b3'); _kolikDetected = false; }, 500);
+      } else if (!isKolik) {
+        _kolikDetected = false;
+      }
+    },2000)};
     if(btn)btn.classList.add('active');
   } catch(e){alert(t('micRequired')+e.message);}
 };
