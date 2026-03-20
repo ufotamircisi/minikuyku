@@ -260,8 +260,8 @@ window.updateLanguageUI = function() {
   _st('whitenoise-section-title',t('sectionWhiteNoise'));
   const kolikFreeBadge = document.getElementById('kolik-free-badge');
   if (kolikFreeBadge) kolikFreeBadge.textContent = t('free');
-  const vcFreeBadge = document.getElementById('voiceclone-free-badge');
-  if (vcFreeBadge) vcFreeBadge.textContent = t('free');
+  const vcBadge = document.getElementById('voiceclone-badge');
+  if (vcBadge) vcBadge.textContent = '👑 ' + t('premium');
   _st('nature-section-title',    t('sectionNature'));
   _st('relax-section-title',     t('sectionRelaxing'));
   _st('todaystats-section-title',t('sectionTodayStats'));
