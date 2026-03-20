@@ -48,15 +48,18 @@ window.stopAll = function() {
 /* ── Now playing göster ──────────────────────────────────────── */
 window.showNowPlaying = function(page, emoji, title, subtitle) {
   const npId = page === 'ninniler' ? 'np-ninniler' : page === 'hikayeler' ? 'np-hikayeler' : 'np-kolik';
-  const np = document.getElementById(npId);
-  if (!np) return;
-  np.classList.add('show');
-  const ic = np.querySelector('.np-icon');
-  const ti = np.querySelector('.np-title');
-  const su = np.querySelector('.np-subtitle');
-  if (ic) ic.textContent = emoji;
-  if (ti) ti.textContent = title;
-  if (su) su.textContent = subtitle;
+  // Bir sonraki frame'de göster — stopAll DOM güncellemesinin tamamlanmasını bekle
+  requestAnimationFrame(function() {
+    const np = document.getElementById(npId);
+    if (!np) return;
+    const ic = np.querySelector('.np-icon');
+    const ti = np.querySelector('.np-title');
+    const su = np.querySelector('.np-subtitle');
+    if (ic) ic.textContent = emoji;
+    if (ti) ti.textContent = title;
+    if (su) su.textContent = subtitle;
+    np.classList.add('show');
+  });
 };
 
 /* ── Play UI ─────────────────────────────────────────────────── */

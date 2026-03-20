@@ -160,6 +160,19 @@ window.finishOnboarding = function() {
   showToast(t('welcomeToast'));
 };
 
+/* ── Onboarding sıfırla ─────────────────────────────────────── */
+window.resetOnboarding = function() {
+  localStorage.removeItem('minikuyku_onboarded');
+  state.onboarded = false;
+  closeModal('settings-modal');
+  const ob = document.getElementById('app-onboarding');
+  if (ob) {
+    ob.style.display = '';
+    ob.classList.add('show');
+  }
+  updateOnboardingLanguage();
+};
+
 /* ══════════════════════════════════════════════════════════════
    SERVICE WORKER
    ══════════════════════════════════════════════════════════════ */
