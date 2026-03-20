@@ -23,10 +23,7 @@ window.renderLullabies = function() {
       </div>
       <button class="play-btn" id="btn-${l.id}" type="button" onclick="event.stopPropagation();playLullaby('${l.id}')">▶</button>
     </div>`).join('');
-  // Kartların tıklama alanını sadece butona yönlendir (çift tetiklenmeyi önle)
-  list.querySelectorAll('.card').forEach(card => {
-    card.onclick = null;
-  });
+  // onclick kartın kendisinde ve butonda — debounce çift tetiklenmeyi önler
   renderVoiceLullabies();
 };
 
@@ -55,12 +52,12 @@ window.renderStories = function() {
   const list = document.getElementById('stories-list');
   if (!list) return;
   list.innerHTML = getActiveStories().map(s => `
-    <div class="story-card" id="story-${s.id}">
+    <div class="story-card" id="story-${s.id}" onclick="playStory('${s.id}')">
       <div class="story-header">
         <span class="story-emoji">${s.emoji}</span>
         <div class="story-content"><h3>${s.title}</h3><p>${s.desc}</p></div>
       </div>
-      <div class="story-footer" onclick="playStory('${s.id}')">
+      <div class="story-footer">
         <span class="card-tag">${s.age}</span>
         <span class="card-tag">${s.duration}</span>
         <span class="card-tag">${s.type}</span>

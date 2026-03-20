@@ -144,13 +144,15 @@ window.playKolik = async function(id) {
   if (kitem) kitem.classList.add('playing');
   if (kbtn)  { kbtn.innerHTML = '⏸'; kbtn.classList.add('playing'); }
   showNowPlaying('kolik', item.emoji, loc ? loc.name : item.name, t('playing'));
-  if (item.file) {
+  if (item.file && CONFIG.SOUNDS_CDN && CONFIG.SOUNDS_CDN !== 'sounds/') {
+    // Sadece CDN tanımlıysa MP3 dene, yoksa direkt Web Audio kullan
     const audio = new Audio(audioSrc(item.file));
     state.currentAudio = audio;
     audio.loop = true;
-    audio.onerror = () => generateKolikSound(id);
+    audio.onerror = () => { state.currentAudio = null; generateKolikSound(id); };
     try { await audio.play(); return; } catch(e) {}
   }
+  // Web Audio API ile üret (MP3 yokken fallback)
   generateKolikSound(id);
 };
 
