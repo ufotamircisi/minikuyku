@@ -23,6 +23,10 @@ window.renderLullabies = function() {
       </div>
       <button class="play-btn" id="btn-${l.id}" type="button" onclick="event.stopPropagation();playLullaby('${l.id}')">▶</button>
     </div>`).join('');
+  // Kartların tıklama alanını sadece butona yönlendir (çift tetiklenmeyi önle)
+  list.querySelectorAll('.card').forEach(card => {
+    card.onclick = null;
+  });
   renderVoiceLullabies();
 };
 
@@ -51,12 +55,12 @@ window.renderStories = function() {
   const list = document.getElementById('stories-list');
   if (!list) return;
   list.innerHTML = getActiveStories().map(s => `
-    <div class="story-card" id="story-${s.id}" onclick="playStory('${s.id}')">
+    <div class="story-card" id="story-${s.id}">
       <div class="story-header">
         <span class="story-emoji">${s.emoji}</span>
         <div class="story-content"><h3>${s.title}</h3><p>${s.desc}</p></div>
       </div>
-      <div class="story-footer">
+      <div class="story-footer" onclick="playStory('${s.id}')">
         <span class="card-tag">${s.age}</span>
         <span class="card-tag">${s.duration}</span>
         <span class="card-tag">${s.type}</span>
@@ -197,6 +201,8 @@ function updateSettingsModal() {
   if (example) example.innerHTML = t('settingsExample')(state.babyName || (state.language==='tr'?'Ayşe':'Emma'));
   const babyInp = document.getElementById('baby-name-input');
   if (babyInp) babyInp.placeholder = state.language==='tr'?'Ayşe / Emma':'Emma / Noah';
+  const resetBtn = document.getElementById('reset-ob-btn');
+  if (resetBtn) resetBtn.textContent = state.language==='tr' ? 'Karşılama ekranını göster' : 'Show welcome screen';
 }
 
 /* ── Dil UI — tüm sayfayı güncelle ──────────────────────────── */
@@ -243,6 +249,12 @@ window.updateLanguageUI = function() {
   if (npHikSub && !state.isPlaying) npHikSub.textContent = t('ready');
   const npKolSub = document.querySelector('#np-kol-subtitle');
   if (npKolSub) npKolSub.textContent = t('unlimited') + ' · ' + t('free');
+
+  // Tahmin kartı
+  const predTitle = document.getElementById('prediction-title-text');
+  if (predTitle) predTitle.textContent = state.language === 'tr' ? 'Sonraki Uyku Tahmini' : 'Next Sleep Prediction';
+  const predDesc = document.getElementById('prediction-desc-text');
+  if (predDesc) predDesc.textContent = state.language === 'tr' ? 'Geçmiş verilere göre tahmini uyku saati:' : 'Estimated next sleep time based on history:';
 
   // Bölüm başlıkları — güvenli güncelleme
   _st('lullaby-section-title',   isTR ? t('sectionLullabiesTR') : t('sectionLullabiesEN'));

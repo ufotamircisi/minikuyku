@@ -214,8 +214,8 @@
     <div class="chart-container" id="sleep-chart"></div>
 
     <div class="prediction-card" id="prediction-card">
-      <div class="prediction-header"><span class="prediction-icon">🔮</span><div class="prediction-title">Sonraki Uyku Tahmini</div></div>
-      <div class="prediction-content"><p>Geçmiş verilere göre tahmini uyku saati:</p><div class="prediction-time" id="prediction-time">--:--</div></div>
+      <div class="prediction-header"><span class="prediction-icon">🔮</span><div class="prediction-title" id="prediction-title-text">Sonraki Uyku Tahmini</div></div>
+      <div class="prediction-content"><p id="prediction-desc-text">Geçmiş verilere göre tahmini uyku saati:</p><div class="prediction-time" id="prediction-time">--:--</div></div>
     </div>
 
     <div class="section-title" id="recentsleep-section-title">Son Uykular</div>
@@ -326,6 +326,10 @@
       💡 <span id="settings-example-text">Örnek: "Uyu <strong style="color:var(--mint)">Ayşe</strong>'m, tatlı rüyalar gör..."</span>
     </div>
     <button class="btn-primary" onclick="saveBabySettings()" type="button">💾 Kaydet</button>
+    <button type="button" onclick="localStorage.removeItem('minikuyku_onboarded');location.reload()" 
+      style="width:100%;margin-top:10px;padding:10px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:inherit;font-size:13px;cursor:pointer">
+      🔄 <span id="reset-ob-btn">Karşılama ekranını göster</span>
+    </button>
   </div>
 </div>
 

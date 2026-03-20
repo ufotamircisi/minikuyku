@@ -29,13 +29,14 @@ document.addEventListener('DOMContentLoaded', function() {
   // Onboarding — ilk girişte göster
   const ob = document.getElementById('app-onboarding');
   if (ob) {
+    ob.style.display = ''; // inline style'ı temizle
     if (!state.onboarded) {
       ob.classList.add('show');
-      ob.style.removeProperty('display');
     } else {
       ob.classList.remove('show');
     }
   }
+  updateOnboardingLanguage();
 
   // Lazy sayfalar için ilk render flag
   state._initializedPages = { ninniler: true };
