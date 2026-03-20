@@ -514,6 +514,8 @@ window.toggleCryDetector = async function() {
   if (!hasAccess()) { showPremiumPrompt(); return; }
   const btn=document.getElementById('cry-detector-btn');
   if(state.cryDetector.active){_stopDet('cryDetector');if(btn)btn.classList.remove('active');return;}
+  // Kolik dedektörü açıksa kapat
+  if(state.kolikDetector.active){_stopDet('kolikDetector');document.getElementById('kolik-detector-btn')?.classList.remove('active');}
   try {
     const stream=await navigator.mediaDevices.getUserMedia({audio:true});
     const ctx=new (window.AudioContext||window.webkitAudioContext)();
@@ -545,6 +547,8 @@ window.toggleKolikDetector = async function() {
   if (!hasAccess()) { showPremiumPrompt(); return; }
   const btn=document.getElementById('kolik-detector-btn');
   if(state.kolikDetector.active){_stopDet('kolikDetector');if(btn)btn.classList.remove('active');return;}
+  // Ağlama dedektörü açıksa kapat
+  if(state.cryDetector.active){_stopDet('cryDetector');document.getElementById('cry-detector-btn')?.classList.remove('active');}
   try {
     const stream=await navigator.mediaDevices.getUserMedia({audio:true});
     const ctx=new (window.AudioContext||window.webkitAudioContext)();
