@@ -184,7 +184,7 @@ window.renderSleepStats = function() {
 
   // Skor etiketi çevirisi
   const scoreLabelEl = document.getElementById('sleep-score-label-text');
-  if (scoreLabelEl) scoreLabelEl.textContent = isTR ? 'Uyku Skoru' : 'Sleep Score';
+  if (scoreLabelEl) scoreLabelEl.textContent = isTR ? 'Uyku Skoru' : 'Score';
   const lockMsgEl = document.getElementById('score-lock-text');
   if (lockMsgEl) lockMsgEl.textContent = isTR ? 'Uyku skoru için Premium\'a geçin' : 'Upgrade to Premium for sleep score';
 

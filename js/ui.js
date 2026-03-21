@@ -111,30 +111,29 @@ window.renderRecordings = function() {
 
 /* ── Klon bölümü ─────────────────────────────────────────────── */
 window.updateCloneSection = function() {
-  const section = document.getElementById('clone-section');
-  if (!section) return;
-  if (!state.recordings.length) {
-    section.innerHTML = `<div class="empty-state"><div class="empty-text">${t('noCloneFirst')}</div></div>`;
-    return;
-  }
+  // Ses klonlama şu an "Çok Yakında" — override etme
+  // Sadece dil güncellemesi yap
   const isTR = state.language === 'tr';
-  section.innerHTML = `
-    <div class="clone-box">
-      <div class="input-group">
-        <label class="input-label">${isTR?'Ses Kaydı Seç':'Select Recording'}</label>
-        <select class="input-field" id="clone-select">
-          ${state.recordings.map(r=>`<option value="${r.id}">${r.name} (${formatTime(r.duration)})</option>`).join('')}
-        </select>
-      </div>
-      <div class="input-group">
-        <label class="input-label">${isTR?'Ses İsmi (isteğe bağlı)':'Voice Name (optional)'}</label>
-        <input class="input-field" id="clone-name" placeholder="${isTR?'Annenin Sesi':'My Voice'}" maxlength="30">
-      </div>
-      <button class="btn-secondary" id="clone-btn" onclick="cloneVoice()" type="button">
-        🎙 ${isTR?'Sesi Klonla':'Clone Voice'}
-      </button>
-      <div class="status-msg" id="clone-status"></div>
-    </div>`;
+  const cloneSoonTitle = document.getElementById('clone-soon-title');
+  const cloneSoonDesc  = document.getElementById('clone-soon-desc');
+  const cloneLock      = document.getElementById('clone-lock-text');
+  const cloneDiscover  = document.getElementById('clone-discover-btn');
+  const cloneInfo      = document.getElementById('clone-info-text');
+  if (cloneSoonTitle) cloneSoonTitle.textContent = isTR
+    ? 'Bebeğin annenin sesiyle uyusun'
+    : 'Let your baby sleep in your voice';
+  if (cloneSoonDesc) cloneSoonDesc.textContent = isTR
+    ? 'Kendi sesinle söylediğin ninnilerle bebeğin daha hızlı sakinleşsin ve huzurla uyusun'
+    : 'With lullabies in your own voice, your baby will calm down faster and sleep peacefully';
+  if (cloneLock) cloneLock.textContent = isTR
+    ? '🔒 Premium\'a özel – çok yakında'
+    : '🔒 Premium only – coming soon';
+  if (cloneDiscover) cloneDiscover.textContent = isTR
+    ? '👑 Premium\'u Keşfet'
+    : '👑 Discover Premium';
+  if (cloneInfo) cloneInfo.textContent = isTR
+    ? 'ℹ️ Bu özellik şu anda geliştiriliyor. İlk olarak Premium kullanıcılar erişebilecek.'
+    : 'ℹ️ This feature is under development. Premium users will get early access.';
 };
 
 /* ── Kayıt cümleleri ─────────────────────────────────────────── */
