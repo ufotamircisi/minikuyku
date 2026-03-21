@@ -185,6 +185,8 @@ window.renderSleepStats = function() {
   // Skor etiketi çevirisi
   const scoreLabelEl = document.getElementById('sleep-score-label-text');
   if (scoreLabelEl) scoreLabelEl.textContent = isTR ? 'Uyku Skoru' : 'Sleep Score';
+  const lockMsgEl = document.getElementById('score-lock-text');
+  if (lockMsgEl) lockMsgEl.textContent = isTR ? 'Uyku skoru için Premium\'a geçin' : 'Upgrade to Premium for sleep score';
 
   // Skor kilidi mesajı
   const lockMsg = document.getElementById('score-lock-text');
@@ -215,9 +217,9 @@ function _renderLastNight(sessions, isTR, isPremium) {
   }
 
   _setVal('ln-total',   totalSec   ? formatTime(totalSec)   : '--');
-  _setVal('ln-wake',    sessions.length ? `${wakeCount} kez` : '--');
+  _setVal('ln-wake',    sessions.length ? `${wakeCount} ${isTR ? 'kez' : 'times'}` : '--');
   _setVal('ln-longest', longestSec ? formatTime(longestSec) : '--');
-  _setVal('ln-calm',    avgCalmMin ? `${avgCalmMin} dk`      : '--');
+  _setVal('ln-calm',    avgCalmMin ? `${avgCalmMin} ${isTR ? 'dk' : 'min'}` : '--');
 
   // Skor (sadece premium)
   const scoreContainer = document.getElementById('sleep-score-container');

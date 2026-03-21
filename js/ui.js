@@ -269,12 +269,23 @@ window.updateLanguageUI = function() {
   const cloneSoonDesc  = document.getElementById('clone-soon-desc');
   const cloneSoonBadge = document.getElementById('clone-soon-badge');
   if (cloneSoonTitle) cloneSoonTitle.textContent = isTR2
-    ? 'Anne Sesiyle Ninni — Çok Yakında'
-    : 'Lullabies in Your Voice — Coming Soon';
+    ? 'Bebeğin annenin sesiyle uyusun'
+    : 'Let your baby sleep in your voice';
   if (cloneSoonDesc) cloneSoonDesc.textContent = isTR2
-    ? 'Kendi sesinizi klonlayın, bebeğiniz ninnileri sizin sesinizle dinlesin.'
-    : 'Clone your voice so your baby can hear lullabies in your own voice.';
-  if (cloneSoonBadge) cloneSoonBadge.textContent = isTR2 ? '🔜 Çok Yakında' : '🔜 Coming Soon';
+    ? 'Kendi sesinle söylediğin ninnilerle bebeğin daha hızlı sakinleşsin ve huzurla uyusun'
+    : 'With lullabies sung in your own voice, your baby will calm down faster and sleep peacefully';
+  const cloneLock = document.getElementById('clone-lock-text');
+  if (cloneLock) cloneLock.textContent = isTR2
+    ? '🔒 Premium\'a özel – çok yakında'
+    : '🔒 Premium only – coming soon';
+  const cloneDiscover = document.getElementById('clone-discover-btn');
+  if (cloneDiscover) cloneDiscover.textContent = isTR2 ? '👑 Premium\'u Keşfet' : '👑 Discover Premium';
+  const cloneInfo = document.getElementById('clone-info-text');
+  if (cloneInfo) cloneInfo.textContent = isTR2
+    ? 'ℹ️ Bu özellik şu anda geliştiriliyor. İlk olarak Premium kullanıcılar erişebilecek.'
+    : 'ℹ️ This feature is under development. Premium users will get early access.';
+  const cloneHeart = document.getElementById('clone-heart');
+  if (cloneHeart) cloneHeart.textContent = '💜';
   _st('nature-section-title',    t('sectionNature'));
   _st('relax-section-title',     t('sectionRelaxing'));
   _st('todaystats-section-title',t('sectionTodayStats'));
