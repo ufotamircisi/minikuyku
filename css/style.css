@@ -480,3 +480,82 @@ body {
   z-index: 20;
   margin-bottom: 12px;
 }
+
+/* ── Analiz / Takip sayfası ─────────────────────────────────── */
+.analysis-header {
+  background: linear-gradient(135deg, rgba(157,140,239,0.12), rgba(93,216,168,0.08));
+  border: 1px solid rgba(157,140,239,0.2);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+.analysis-header-title {
+  font-size: 14px; font-weight: 700; color: var(--accent-light); margin-bottom: 4px;
+}
+.analysis-header-sub {
+  font-size: 11px; color: var(--text-muted); line-height: 1.4;
+}
+
+/* Dün Gece kartı */
+.lastnight-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 16px; margin-bottom: 16px;
+}
+.lastnight-grid {
+  display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin-bottom: 16px;
+}
+.lastnight-item { text-align: center; }
+.lastnight-value {
+  font-size: 22px; font-weight: 700; color: var(--accent-light); margin-bottom: 4px;
+}
+.lastnight-label { font-size: 11px; color: var(--text-muted); }
+
+/* Uyku skoru */
+.sleep-score-container {
+  display: flex; align-items: center; gap: 16px;
+  background: linear-gradient(135deg, rgba(240,192,96,0.12), rgba(157,140,239,0.08));
+  border: 1px solid rgba(240,192,96,0.2);
+  border-radius: var(--radius-md); padding: 16px; margin-top: 12px;
+}
+.sleep-score-circle {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), #d4a84b);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.sleep-score-value { font-size: 24px; font-weight: 700; color: #0a0e1a; }
+.sleep-score-label { font-size: 9px; color: #0a0e1a; font-weight: 600; }
+.sleep-score-status { font-size: 16px; font-weight: 700; color: var(--text); flex: 1; }
+
+/* Premium lock mesajı */
+.premium-lock-msg {
+  text-align: center; padding: 10px;
+  font-size: 12px; color: var(--text-muted);
+  border-top: 1px solid var(--border); margin-top: 12px;
+  cursor: pointer;
+}
+.premium-lock-msg:hover { color: var(--gold); }
+
+/* Trend kartı */
+.trend-card {
+  background: linear-gradient(135deg, rgba(93,216,168,0.1), rgba(157,140,239,0.08));
+  border: 1px solid rgba(93,216,168,0.2);
+  border-radius: var(--radius-md); padding: 14px;
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.trend-icon { font-size: 24px; }
+.trend-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+/* Grafik overlay (premium lock) */
+#sleep-chart-wrapper { position: relative; margin-bottom: 16px; }
+.premium-overlay {
+  position: absolute; inset: 0;
+  background: rgba(10,14,26,0.85);
+  backdrop-filter: blur(4px);
+  border-radius: var(--radius-lg);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 10;
+}
+.premium-overlay-content { text-align: center; padding: 20px; }
+.premium-overlay-content div { color: var(--text); font-size: 14px; margin-top: 8px; }

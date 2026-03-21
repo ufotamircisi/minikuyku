@@ -511,68 +511,156 @@ window.cancelTimer = function() {
 
 /* ── Dedektörler ─────────────────────────────────────────────── */
 window.toggleCryDetector = async function() {
-  if (!hasAccess()) { showPremiumPrompt(); return; }
-  const btn=document.getElementById('cry-detector-btn');
-  if(state.cryDetector.active){_stopDet('cryDetector');if(btn)btn.classList.remove('active');return;}
-  // Kolik dedektörü açıksa kapat
-  if(state.kolikDetector.active){_stopDet('kolikDetector');document.getElementById('kolik-detector-btn')?.classList.remove('active');}
+  const btn = document.getElementById('cry-detector-btn');
+
+  // Zaten açıksa kapat
+  if (state.cryDetector.active) {
+    _stopDet('cryDetector');
+    if (btn) btn.classList.remove('active');
+    return;
+  }
+
+  // Kolik açıksa kapat
+  if (state.kolikDetector.active) {
+    _stopDet('kolikDetector');
+    document.getElementById('kolik-detector-btn')?.classList.remove('active');
+  }
+
+  // Ücretsiz: günlük limit kontrolü
+  const isPremium = hasAccess() && state.isPremium;
+  if (!isPremium) {
+    const today = new Date().toDateString();
+    const usage = JSON.parse(localStorage.getItem('cry_det_usage') || '{"date":"","count":0}');
+    if (usage.date !== today) { usage.date = today; usage.count = 0; }
+    if (usage.count >= 1) {
+      showToast(state.language==='tr'
+        ? "⚠️ Günlük kullanım hakkınız doldu. Premium'a geçin!"
+        : '⚠️ Daily limit reached. Upgrade to Premium!');
+      showPremiumModal();
+      return;
+    }
+    usage.count++;
+    localStorage.setItem('cry_det_usage', JSON.stringify(usage));
+  }
+
   try {
-    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
-    const ctx=new (window.AudioContext||window.webkitAudioContext)();
-    const analyser=ctx.createAnalyser();analyser.fftSize=512;
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    const ctx    = new (window.AudioContext||window.webkitAudioContext)();
+    const analyser = ctx.createAnalyser(); analyser.fftSize = 512;
     ctx.createMediaStreamSource(stream).connect(analyser);
-    const data=new Uint8Array(analyser.frequencyBinCount);
+    const data = new Uint8Array(analyser.frequencyBinCount);
     let _cryDetected = false;
-    state.cryDetector={active:true,stream,context:ctx,analyser,interval:setInterval(()=>{
-      analyser.getByteFrequencyData(data);
-      // Bebek ağlaması: yüksek enerji + orta-yüksek frekans baskın
-      const avgAll = averageArray(data);
-      const avgMid = averageArray(data.slice(18,60));
-      const avgHigh = averageArray(data.slice(60,120));
-      const isCrying = avgAll > 35 && avgMid > 30 && avgHigh > 20;
-      if(isCrying && !_cryDetected && !state.isPlaying) {
-        _cryDetected = true;
-        showToast(state.language==='tr'?'🎙 Ağlama tespit edildi! Ninni başlatılıyor...':'🎙 Crying detected! Starting lullaby...');
-        // Dandini çal (l1)
-        setTimeout(()=>{ playLullaby('l1'); _cryDetected = false; }, 500);
-      } else if (!isCrying) {
-        _cryDetected = false;
-      }
-    },1500)};
-    if(btn)btn.classList.add('active');
-  } catch(e){alert(t('micRequired')+e.message);}
+    let _playing     = false;
+
+    state.cryDetector = { active:true, stream, context:ctx, analyser,
+      interval: setInterval(() => {
+        analyser.getByteFrequencyData(data);
+        const avgAll  = averageArray(data);
+        const avgMid  = averageArray(data.slice(18,60));
+        const avgHigh = averageArray(data.slice(60,120));
+        const isCrying = avgAll > 35 && avgMid > 30 && avgHigh > 20;
+
+        if (isCrying && !_cryDetected && !state.isPlaying) {
+          _cryDetected = true;
+          _playing     = true;
+          showToast(state.language==='tr'
+            ? '🎙 Ağlama tespit edildi! Ninni başlıyor...'
+            : '🎙 Crying detected! Starting lullaby...');
+          setTimeout(() => { playLullaby('l1'); }, 500);
+
+          // Ücretsiz: 1 kullanım → dedektör kapanır
+          if (!isPremium) {
+            setTimeout(() => {
+              _stopDet('cryDetector');
+              if (btn) btn.classList.remove('active');
+            }, 2000);
+          }
+        } else if (!isCrying && _playing && !state.isPlaying) {
+          // Premium: ninni bitti, bebek sakinleşti → tekrar dinle
+          _playing     = false;
+          _cryDetected = false;
+        } else if (!isCrying) {
+          _cryDetected = false;
+        }
+      }, 1500)
+    };
+    if (btn) btn.classList.add('active');
+  } catch(e) { alert(t('micRequired') + e.message); }
 };
 
 window.toggleKolikDetector = async function() {
-  if (!hasAccess()) { showPremiumPrompt(); return; }
-  const btn=document.getElementById('kolik-detector-btn');
-  if(state.kolikDetector.active){_stopDet('kolikDetector');if(btn)btn.classList.remove('active');return;}
-  // Ağlama dedektörü açıksa kapat
-  if(state.cryDetector.active){_stopDet('cryDetector');document.getElementById('cry-detector-btn')?.classList.remove('active');}
+  const btn = document.getElementById('kolik-detector-btn');
+
+  if (state.kolikDetector.active) {
+    _stopDet('kolikDetector');
+    if (btn) btn.classList.remove('active');
+    return;
+  }
+
+  // Ağlama açıksa kapat
+  if (state.cryDetector.active) {
+    _stopDet('cryDetector');
+    document.getElementById('cry-detector-btn')?.classList.remove('active');
+  }
+
+  // Ücretsiz: günlük limit kontrolü
+  const isPremium = hasAccess() && state.isPremium;
+  if (!isPremium) {
+    const today = new Date().toDateString();
+    const usage = JSON.parse(localStorage.getItem('kolik_det_usage') || '{"date":"","count":0}');
+    if (usage.date !== today) { usage.date = today; usage.count = 0; }
+    if (usage.count >= 1) {
+      showToast(state.language==='tr'
+        ? "⚠️ Günlük kullanım hakkınız doldu. Premium'a geçin!"
+        : '⚠️ Daily limit reached. Upgrade to Premium!');
+      showPremiumModal();
+      return;
+    }
+    usage.count++;
+    localStorage.setItem('kolik_det_usage', JSON.stringify(usage));
+  }
+
   try {
-    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
-    const ctx=new (window.AudioContext||window.webkitAudioContext)();
-    const analyser=ctx.createAnalyser();analyser.fftSize=512;
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    const ctx    = new (window.AudioContext||window.webkitAudioContext)();
+    const analyser = ctx.createAnalyser(); analyser.fftSize = 512;
     ctx.createMediaStreamSource(stream).connect(analyser);
-    const data=new Uint8Array(analyser.frequencyBinCount);
+    const data = new Uint8Array(analyser.frequencyBinCount);
     let _kolikDetected = false;
-    state.kolikDetector={active:true,stream,context:ctx,analyser,interval:setInterval(()=>{
-      analyser.getByteFrequencyData(data);
-      // Kolik ağlaması: yüksek frekans baskın + sürekli yüksek enerji
-      const avgAll = averageArray(data);
-      const avgHigh = averageArray(data.slice(60,120));
-      const isKolik = avgAll > 40 && avgHigh > 35;
-      if(isKolik && !_kolikDetected && !state.isPlaying) {
-        _kolikDetected = true;
-        showToast(state.language==='tr'?'🌿 Kolik belirtisi! Beyaz gürültü başlatılıyor...':'🌿 Colic detected! Starting white noise...');
-        // Beyaz gürültü çal (b1 - saç kurutma / beyaz gürültü)
-        setTimeout(()=>{ playKolik('b3'); _kolikDetected = false; }, 500);
-      } else if (!isKolik) {
-        _kolikDetected = false;
-      }
-    },2000)};
-    if(btn)btn.classList.add('active');
-  } catch(e){alert(t('micRequired')+e.message);}
+    let _playing       = false;
+
+    state.kolikDetector = { active:true, stream, context:ctx, analyser,
+      interval: setInterval(() => {
+        analyser.getByteFrequencyData(data);
+        const avgAll  = averageArray(data);
+        const avgHigh = averageArray(data.slice(60,120));
+        const isKolik = avgAll > 40 && avgHigh > 35;
+
+        if (isKolik && !_kolikDetected && !state.isPlaying) {
+          _kolikDetected = true;
+          _playing       = true;
+          showToast(state.language==='tr'
+            ? '🌿 Kolik tespit edildi! Beyaz gurultu basliyor...'
+            : '🌿 Colic detected! Starting white noise...');
+          setTimeout(() => { playKolik('b3'); }, 500);
+
+          // Ücretsiz: 1 kullanım → dedektör kapanır
+          if (!isPremium) {
+            setTimeout(() => {
+              _stopDet('kolikDetector');
+              if (btn) btn.classList.remove('active');
+            }, 2000);
+          }
+        } else if (!isKolik && _playing && !state.isPlaying) {
+          _playing       = false;
+          _kolikDetected = false;
+        } else if (!isKolik) {
+          _kolikDetected = false;
+        }
+      }, 2000)
+    };
+    if (btn) btn.classList.add('active');
+  } catch(e) { alert(t('micRequired') + e.message); }
 };
 
 function _stopDet(key){
