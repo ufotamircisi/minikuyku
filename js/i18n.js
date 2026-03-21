@@ -121,7 +121,7 @@ window.I18N = {
     premium: 'Premium',
 
     navLullabies: 'Lullabies', navStories: 'Stories',
-    navColic: 'Colic', navTracking: 'Analysis', navVoice: 'My Voice',
+    navColic: 'Colic', navTracking: 'Analysis/Tracking', navVoice: 'My Voice',
 
     timer: 'Timer', cryDetector: 'Cry Detector',
     colicDetector: 'Colic Detector', whenStop: 'When should it stop?',

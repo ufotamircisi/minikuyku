@@ -227,7 +227,7 @@ function _renderLastNight(sessions, isTR, isPremium) {
 
   if (isPremium && sessions.length > 0) {
     const score  = calcSleepScore(sessions);
-    const status = scoreStatus(score, state.language);
+    const status = scoreStatus(score, isTR ? 'tr' : 'en');
     _setVal('sleep-score-value', score);
     const statusEl = document.getElementById('sleep-score-status');
     if (statusEl) { statusEl.textContent = status.text; statusEl.style.color = status.color; }
