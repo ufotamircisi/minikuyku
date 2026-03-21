@@ -246,6 +246,16 @@ window.updateLanguageUI = function() {
   const npKolSub = document.querySelector('#np-kol-subtitle');
   if (npKolSub) npKolSub.textContent = t('unlimited') + ' · ' + t('free');
 
+  // Analiz sayfası başlık & alt yazı
+  const analysisTitle = document.getElementById('analysis-main-title');
+  const analysisSub   = document.getElementById('analysis-main-sub');
+  if (analysisTitle) analysisTitle.textContent = state.language === 'tr'
+    ? '🎙 Ses Tabanlı Tahmini Uyku Analizi'
+    : '🎙 Sound-Based Sleep Analysis (Estimated)';
+  if (analysisSub) analysisSub.textContent = state.language === 'tr'
+    ? '(Bu veriler mikrofon sesine dayalı tahmindir, tıbbi teşhis değildir.)'
+    : '(These are estimates based on microphone sound, not medical diagnosis.)';
+
   // Tahmin kartı
   const predTitle = document.getElementById('prediction-title-text');
   if (predTitle) predTitle.textContent = state.language === 'tr' ? 'Sonraki Uyku Tahmini' : 'Next Sleep Prediction';

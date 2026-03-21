@@ -230,7 +230,7 @@
       <div class="sleep-score-container" id="sleep-score-container" style="display:none">
         <div class="sleep-score-circle">
           <div class="sleep-score-value" id="sleep-score-value">--</div>
-          <div class="sleep-score-label">Uyku Skoru</div>
+          <div class="sleep-score-label" id="sleep-score-label-text">Uyku Skoru</div>
         </div>
         <div class="sleep-score-status" id="sleep-score-status"></div>
       </div>
@@ -275,6 +275,22 @@
   <!-- ── Sesim ──────────────────────────────────────────────── -->
   <div class="page" id="page-sesim">
 
+    <div class="section-title" id="voiceclone-section-title">Ses Klonlama <span class="premium-badge" id="voiceclone-badge">👑 Premium</span></div>
+    <div class="voice-coming-card" id="clone-section">
+      <div class="voice-coming-heart" id="clone-heart">💜</div>
+      <div class="voice-coming-title" id="clone-soon-title">Bebeğin annenin sesiyle uyusun</div>
+      <div class="voice-coming-desc" id="clone-soon-desc">Kendi sesinle söylediğin ninnilerle bebeğin daha hızlı sakinleşsin ve huzurla uyusun</div>
+      <div class="voice-coming-lock" id="clone-lock-text">🔒 Premium'a özel – çok yakında</div>
+      <button class="btn-primary" onclick="showPremiumModal()" type="button" id="clone-discover-btn">👑 Premium'u Keşfet</button>
+      <div class="voice-coming-divider"></div>
+      <div class="voice-coming-info" id="clone-info-text">ℹ️ Bu özellik şu anda geliştiriliyor. İlk olarak Premium kullanıcılar erişebilecek.</div>
+    </div>
+
+    <div class="section-title" id="recordings-section-title">Kayıtlarım</div>
+    <div id="recordings-list">
+      <div class="empty-state"><div class="empty-icon">🎙️</div><div class="empty-text">Henüz kayıt yok</div></div>
+    </div>
+
     <div class="record-section">
       <button class="record-btn" id="record-btn" onclick="toggleRecording()" type="button">🎙️</button>
       <div class="record-timer" id="record-timer">0:00</div>
@@ -286,22 +302,6 @@
         <div class="phrase">Gece sessiz, yıldızlar gökyüzünde parlıyor...</div>
         <div class="phrase">Mmm... eee... şşş... derin bir nefes al ve bırak...</div>
       </div>
-    </div>
-
-    <div class="section-title" id="recordings-section-title">Kayıtlarım</div>
-    <div id="recordings-list">
-      <div class="empty-state"><div class="empty-icon">🎙️</div><div class="empty-text">Henüz kayıt yok</div></div>
-    </div>
-
-    <div class="section-title" id="voiceclone-section-title">Ses Klonlama <span class="premium-badge" id="voiceclone-badge">👑 Premium</span></div>
-    <div class="voice-coming-card" id="clone-section">
-      <div class="voice-coming-heart" id="clone-heart">💜</div>
-      <div class="voice-coming-title" id="clone-soon-title">Bebeğin annenin sesiyle uyusun</div>
-      <div class="voice-coming-desc" id="clone-soon-desc">Kendi sesinle söylediğin ninnilerle bebeğin daha hızlı sakinleşsin ve huzurla uyusun</div>
-      <div class="voice-coming-lock" id="clone-lock-text">🔒 Premium'a özel – çok yakında</div>
-      <button class="btn-primary" onclick="showPremiumModal()" type="button" id="clone-discover-btn">👑 Premium'u Keşfet</button>
-      <div class="voice-coming-divider"></div>
-      <div class="voice-coming-info" id="clone-info-text">ℹ️ Bu özellik şu anda geliştiriliyor. İlk olarak Premium kullanıcılar erişebilecek.</div>
     </div>
 
     <div id="voice-generator" style="display:none">
