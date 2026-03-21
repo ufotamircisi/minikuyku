@@ -18,7 +18,7 @@ window.renderLullabies = function() {
         <div class="card-desc">${l.desc}</div>
         <div class="card-tags">
           <span class="card-tag">${l.origin}</span>
-          <span class="card-tag premium">${hasAccess() ? ('✨ '+t('trialBadge')) : ('👑 '+t('lockedBadge'))}</span>
+          <span class="card-tag free" style="background:rgba(93,216,168,0.15);color:var(--mint)">✅ ${t('free')}</span>
         </div>
       </div>
       <button class="play-btn" id="btn-${l.id}" type="button" onclick="event.stopPropagation();playLullaby('${l.id}')">▶</button>
