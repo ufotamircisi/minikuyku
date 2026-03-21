@@ -11,7 +11,7 @@ window.I18N = {
 
     /* Navigasyon */
     navLullabies: 'Ninniler', navStories: 'Hikayeler',
-    navColic: 'Kolik', navTracking: 'Takip', navVoice: 'Sesim',
+    navColic: 'Kolik', navTracking: 'Analiz/Takip', navVoice: 'Sesim',
 
     /* Genel */
     timer: 'Zamanlayıcı', cryDetector: 'Ağlama Dedektörü',
@@ -121,7 +121,7 @@ window.I18N = {
     premium: 'Premium',
 
     navLullabies: 'Lullabies', navStories: 'Stories',
-    navColic: 'Colic', navTracking: 'Tracking', navVoice: 'My Voice',
+    navColic: 'Colic', navTracking: 'Analysis', navVoice: 'My Voice',
 
     timer: 'Timer', cryDetector: 'Cry Detector',
     colicDetector: 'Colic Detector', whenStop: 'When should it stop?',

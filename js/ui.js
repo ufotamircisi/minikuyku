@@ -262,6 +262,19 @@ window.updateLanguageUI = function() {
   if (kolikFreeBadge) kolikFreeBadge.textContent = t('free');
   const vcBadge = document.getElementById('voiceclone-badge');
   if (vcBadge) vcBadge.textContent = '👑 ' + t('premium');
+
+  // Ses klonlama "Çok Yakında" çevirisi
+  const isTR2 = state.language === 'tr';
+  const cloneSoonTitle = document.getElementById('clone-soon-title');
+  const cloneSoonDesc  = document.getElementById('clone-soon-desc');
+  const cloneSoonBadge = document.getElementById('clone-soon-badge');
+  if (cloneSoonTitle) cloneSoonTitle.textContent = isTR2
+    ? 'Anne Sesiyle Ninni — Çok Yakında'
+    : 'Lullabies in Your Voice — Coming Soon';
+  if (cloneSoonDesc) cloneSoonDesc.textContent = isTR2
+    ? 'Kendi sesinizi klonlayın, bebeğiniz ninnileri sizin sesinizle dinlesin.'
+    : 'Clone your voice so your baby can hear lullabies in your own voice.';
+  if (cloneSoonBadge) cloneSoonBadge.textContent = isTR2 ? '🔜 Çok Yakında' : '🔜 Coming Soon';
   _st('nature-section-title',    t('sectionNature'));
   _st('relax-section-title',     t('sectionRelaxing'));
   _st('todaystats-section-title',t('sectionTodayStats'));

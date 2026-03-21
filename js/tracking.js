@@ -162,6 +162,7 @@ window.renderSleepStats = function() {
 
   // Bölüm başlıkları
   _st('lastnight-section-title', isTR ? 'Dün Gece' : 'Last Night');
+  _st('sleepchart-section-title', isTR ? 'Son 7 Gün' : 'Last 7 Days');
   _st('recentsleep-section-title', t('sectionRecentSleeps'));
   _st('experttips-section-title', t('sectionExpertTips'));
 
@@ -180,6 +181,10 @@ window.renderSleepStats = function() {
     const el = document.getElementById(`ln-${k}-label`);
     if (el) el.textContent = lnLabels[k];
   });
+
+  // Skor etiketi çevirisi
+  const scoreLabelEl = document.getElementById('sleep-score-label-text');
+  if (scoreLabelEl) scoreLabelEl.textContent = isTR ? 'Uyku Skoru' : 'Sleep Score';
 
   // Skor kilidi mesajı
   const lockMsg = document.getElementById('score-lock-text');

@@ -559,3 +559,26 @@ body {
 }
 .premium-overlay-content { text-align: center; padding: 20px; }
 .premium-overlay-content div { color: var(--text); font-size: 14px; margin-top: 8px; }
+
+/* ── Çok Yakında kartı ───────────────────────────────────────── */
+.coming-soon-card {
+  background: linear-gradient(135deg, rgba(157,140,239,0.1), rgba(93,216,168,0.05));
+  border: 1px dashed rgba(157,140,239,0.3);
+  border-radius: var(--radius-lg);
+  padding: 28px 20px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.coming-soon-icon { font-size: 48px; margin-bottom: 12px; }
+.coming-soon-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--accent-light); }
+.coming-soon-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+.coming-soon-badge {
+  display: inline-block;
+  background: rgba(240,192,96,0.15);
+  border: 1px solid rgba(240,192,96,0.3);
+  color: var(--gold);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
