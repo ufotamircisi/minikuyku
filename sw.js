@@ -4,8 +4,8 @@
    ═══════════════════════════════════════════════════════════════ */
 'use strict';
 
-const CACHE_NAME  = 'minikuyku-v2.0';
-const AUDIO_CACHE = 'minikuyku-audio-v2.0';
+const CACHE_NAME  = 'minikuyku-v2.1';
+const AUDIO_CACHE = 'minikuyku-audio-v2.1';
 
 const PRECACHE = [
   './',
@@ -35,7 +35,7 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME && k !== AUDIO_CACHE).map(k => caches.delete(k))))
+      .then(keys => Promise.all(keys.filter(k => k !== 'minikuyku-v2.1' && k !== 'minikuyku-audio-v2.1').map(k => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
