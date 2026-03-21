@@ -191,8 +191,13 @@
 
   </div><!-- /kolik -->
 
-  <!-- ── Takip ──────────────────────────────────────────────── -->
+  <!-- ── Analiz / Takip ───────────────────────────────────── -->
   <div class="page" id="page-takip">
+
+    <div class="analysis-header">
+      <div class="analysis-header-title" id="analysis-main-title">🎙 Ses Tabanlı Tahmini Uyku Analizi</div>
+      <div class="analysis-header-sub">(Bu veriler mikrofon sesine dayalı tahmindir, tıbbi teşhis değildir.)</div>
+    </div>
 
     <div class="sleep-tracker">
       <div class="sleep-status" id="sleep-status">Bebek uyanık</div>
@@ -202,20 +207,53 @@
       </button>
     </div>
 
-    <div class="section-title" id="todaystats-section-title">Bugünün İstatistikleri</div>
-    <div class="sleep-stats">
-      <div class="stat-card"><div class="stat-value" id="stat-total">0:00</div><div class="stat-label">Toplam Uyku</div></div>
-      <div class="stat-card"><div class="stat-value" id="stat-count">0</div><div class="stat-label">Uyku Sayısı</div></div>
-      <div class="stat-card"><div class="stat-value" id="stat-avg">0:00</div><div class="stat-label">Ortalama</div></div>
-      <div class="stat-card"><div class="stat-value" id="stat-wake">0</div><div class="stat-label">Uyanma</div></div>
+    <div class="section-title" id="lastnight-section-title">Dün Gece</div>
+    <div class="lastnight-card" id="lastnight-card">
+      <div class="lastnight-grid">
+        <div class="lastnight-item">
+          <div class="lastnight-value" id="ln-total">--</div>
+          <div class="lastnight-label" id="ln-total-label">Toplam Uyku</div>
+        </div>
+        <div class="lastnight-item">
+          <div class="lastnight-value" id="ln-wake">--</div>
+          <div class="lastnight-label" id="ln-wake-label">Uyanma</div>
+        </div>
+        <div class="lastnight-item">
+          <div class="lastnight-value" id="ln-longest">--</div>
+          <div class="lastnight-label" id="ln-longest-label">En Uzun Uyku</div>
+        </div>
+        <div class="lastnight-item">
+          <div class="lastnight-value" id="ln-calm">--</div>
+          <div class="lastnight-label" id="ln-calm-label">Ort. Sakinleşme</div>
+        </div>
+      </div>
+      <div class="sleep-score-container" id="sleep-score-container" style="display:none">
+        <div class="sleep-score-circle">
+          <div class="sleep-score-value" id="sleep-score-value">--</div>
+          <div class="sleep-score-label">Uyku Skoru</div>
+        </div>
+        <div class="sleep-score-status" id="sleep-score-status"></div>
+      </div>
+      <div class="premium-lock-msg" id="score-lock-msg" onclick="showPremiumModal()">
+        <span>👑</span> <span id="score-lock-text">Uyku skoru için Premium'a geçin</span>
+      </div>
     </div>
 
-    <div class="section-title" id="sleepchart-section-title">Uyku Grafiği (Son 7 Gün)</div>
-    <div class="chart-container" id="sleep-chart"></div>
+    <div class="trend-card" id="trend-card" style="display:none">
+      <div class="trend-icon">📈</div>
+      <div class="trend-text" id="trend-text"></div>
+    </div>
 
-    <div class="prediction-card" id="prediction-card">
-      <div class="prediction-header"><span class="prediction-icon">🔮</span><div class="prediction-title" id="prediction-title-text">Sonraki Uyku Tahmini</div></div>
-      <div class="prediction-content"><p id="prediction-desc-text">Geçmiş verilere göre tahmini uyku saati:</p><div class="prediction-time" id="prediction-time">--:--</div></div>
+    <div class="section-title" id="sleepchart-section-title">Son 7 Gün <span class="premium-badge" id="chart-badge">👑 Premium</span></div>
+    <div id="sleep-chart-wrapper">
+      <div class="chart-container" id="sleep-chart"></div>
+      <div class="premium-overlay" id="chart-overlay">
+        <div class="premium-overlay-content">
+          <div style="font-size:32px">📊</div>
+          <div id="chart-overlay-text">7 günlük grafik için Premium'a geçin</div>
+          <button class="btn-primary" style="margin-top:12px;width:auto;padding:10px 24px" onclick="showPremiumModal()" type="button">👑 Premium</button>
+        </div>
+      </div>
     </div>
 
     <div class="section-title" id="recentsleep-section-title">Son Uykular</div>
