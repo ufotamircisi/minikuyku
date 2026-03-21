@@ -613,3 +613,27 @@ body {
   font-size: 12px; color: var(--text-muted);
   line-height: 1.5; font-style: italic;
 }
+
+/* ── Ağlama analizi ücretsiz liste ──────────────────────────── */
+.analysis-free-list { padding: 8px 0; }
+.analysis-free-item {
+  padding: 10px 12px; font-size: 14px; color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+.analysis-free-item.top { font-weight: 700; color: var(--accent-light); font-size: 15px; }
+.analysis-free-upgrade {
+  text-align: center; padding: 12px;
+  font-size: 12px; color: var(--gold);
+  cursor: pointer; margin-top: 8px;
+  border: 1px dashed rgba(240,192,96,0.3);
+  border-radius: var(--radius-md);
+}
+.analysis-free-upgrade:hover { background: rgba(240,192,96,0.08); }
+.analysis-tip {
+  background: rgba(93,216,168,0.1);
+  border-left: 3px solid var(--mint);
+  padding: 10px 12px; margin: 10px 0;
+  font-size: 13px; color: var(--text);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  line-height: 1.5;
+}

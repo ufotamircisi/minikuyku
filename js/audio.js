@@ -436,7 +436,22 @@ function _pispis(dest){
    AĞLAMA ANALİZİ
    ════════════════════════════════════════════════════════════════ */
 window.startCryAnalysis = async function() {
-  if (!hasAccess()) { showPremiumPrompt(); return; }
+  const isPrem = hasAccess() && state.isPremium;
+  if (!hasAccess()) {
+    // Ücretsiz: günde 2 hak
+    const today = new Date().toDateString();
+    const usage = JSON.parse(localStorage.getItem('cry_analysis_usage') || '{"date":"","count":0}');
+    if (usage.date !== today) { usage.date = today; usage.count = 0; }
+    if (usage.count >= 2) {
+      showToast(state.language === 'tr'
+        ? "⚠️ Günlük 2 analizinizi kullandınız. Premiyuma geçin!"
+        : "⚠️ Daily limit of 2 analyses reached. Upgrade to Premium!");
+      showPremiumModal();
+      return;
+    }
+    usage.count++;
+    localStorage.setItem('cry_analysis_usage', JSON.stringify(usage));
+  }
   const btn=document.getElementById('cry-analysis-btn');
   const result=document.getElementById('cry-analysis-result');
   if(!btn||!result) return;
@@ -478,8 +493,55 @@ function _classifyCry(samples){
 }
 
 function _renderCryResult(analysis){
-  const el=document.getElementById('cry-analysis-result'); if(!el) return;
-  el.innerHTML=analysis.map(item=>`<div class="analysis-row"><div class="analysis-label">${item.label}</div><div class="analysis-bar"><div class="analysis-fill" style="width:${item.value}%"></div></div><div class="analysis-pct">%${item.value}</div></div>`).join('')+`<div class="soft-note">${t('cryResultNote')}</div>`;
+  const el = document.getElementById('cry-analysis-result'); if (!el) return;
+  const isPrem = hasAccess() && state.isPremium;
+  const isTR   = state.language === 'tr';
+
+  if (isPrem) {
+    // Premium: yüzdelik dağılım + öneri
+    const topReason = analysis[0];
+    const tips = {
+      tr: {
+        hunger:  'Bebeğiniz aç olabilir. Emzirmeyi veya mama vermeyi deneyin.',
+        gas:     'Gaz sancısı olabilir. Bebeği sırtüstü yatırıp bacaklarını nazikçe döndürün.',
+        sleepy:  'Bebek uyku sinyali veriyor. Karanlık ve sessiz bir ortam oluşturun.',
+        pee:     'Bez kontrolü yapın.',
+        poop:    'Bez kontrolü yapın, karın şişliği olabilir.',
+      },
+      en: {
+        hunger:  'Your baby may be hungry. Try breastfeeding or bottle feeding.',
+        gas:     'Gas pain likely. Gently bicycle baby's legs to help.',
+        sleepy:  'Baby is showing sleep cues. Create a dark, quiet environment.',
+        pee:     'Check the diaper.',
+        poop:    'Check the diaper, there may be bloating.',
+      }
+    };
+    const tipKey = Object.keys({hunger:'',gas:'',sleepy:'',pee:'',poop:''})
+      .find(k => (isTR ? t('cryLabels').tr?.[k] : t('cryLabels').en?.[k]) === topReason?.label) || 'hunger';
+    const tip = (isTR ? tips.tr : tips.en)[tipKey] || '';
+
+    el.innerHTML = analysis.map(item => `
+      <div class="analysis-row">
+        <div class="analysis-label">${item.label}</div>
+        <div class="analysis-bar"><div class="analysis-fill" style="width:${item.value}%"></div></div>
+        <div class="analysis-pct">%${item.value}</div>
+      </div>`).join('') +
+      (tip ? `<div class="analysis-tip">💡 ${tip}</div>` : '') +
+      `<div class="soft-note">${t('cryResultNote')}</div>`;
+  } else {
+    // Ücretsiz: sadece liste (yüzde yok)
+    el.innerHTML = `
+      <div class="analysis-free-list">
+        ${analysis.slice(0,3).map((item,i) => `
+          <div class="analysis-free-item ${i===0?'top':''}">
+            ${i===0?'🔴':i===1?'🟡':'🟢'} ${item.label}
+          </div>`).join('')}
+      </div>
+      <div class="analysis-free-upgrade" onclick="showPremiumModal()">
+        👑 ${isTR ? 'Yüzdelik dağılım ve öneriler için Premium'a geçin' : 'Upgrade to Premium for percentages & tips'}
+      </div>
+      <div class="soft-note">${t('cryResultNote')}</div>`;
+  }
   el.classList.add('show');
 }
 
@@ -568,12 +630,15 @@ window.toggleCryDetector = async function() {
             : '🎙 Crying detected! Starting lullaby...');
           setTimeout(() => { playLullaby('l1'); }, 500);
 
-          // Ücretsiz: 1 kullanım → dedektör kapanır
+          // Ücretsiz: 15 dk sonra kapanır, tekrar başlatmaz
           if (!isPremium) {
             setTimeout(() => {
               _stopDet('cryDetector');
               if (btn) btn.classList.remove('active');
-            }, 2000);
+              showToast(state.language === 'tr'
+                ? '⏱ 15 dakikalık süreniz doldu.'
+                : '⏱ Your 15-minute session ended.');
+            }, 15 * 60 * 1000);
           }
         } else if (!isCrying && _playing && !state.isPlaying) {
           // Premium: ninni bitti, bebek sakinleşti → tekrar dinle
@@ -644,12 +709,15 @@ window.toggleKolikDetector = async function() {
             : '🌿 Colic detected! Starting white noise...');
           setTimeout(() => { playKolik('b3'); }, 500);
 
-          // Ücretsiz: 1 kullanım → dedektör kapanır
+          // Ücretsiz: 15 dk sonra kapanır
           if (!isPremium) {
             setTimeout(() => {
               _stopDet('kolikDetector');
               if (btn) btn.classList.remove('active');
-            }, 2000);
+              showToast(state.language === 'tr'
+                ? '⏱ 15 dakikalık süreniz doldu.'
+                : '⏱ Your 15-minute session ended.');
+            }, 15 * 60 * 1000);
           }
         } else if (!isKolik && _playing && !state.isPlaying) {
           _playing       = false;
