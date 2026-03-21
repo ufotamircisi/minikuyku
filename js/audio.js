@@ -510,7 +510,7 @@ function _renderCryResult(analysis){
       },
       en: {
         hunger:  'Your baby may be hungry. Try breastfeeding or bottle feeding.',
-        gas:     'Gas pain likely. Gently bicycle baby's legs to help.',
+        gas:     "Gas pain likely. Gently bicycle baby's legs to help.",
         sleepy:  'Baby is showing sleep cues. Create a dark, quiet environment.',
         pee:     'Check the diaper.',
         poop:    'Check the diaper, there may be bloating.',
@@ -538,7 +538,7 @@ function _renderCryResult(analysis){
           </div>`).join('')}
       </div>
       <div class="analysis-free-upgrade" onclick="showPremiumModal()">
-        👑 ${isTR ? 'Yüzdelik dağılım ve öneriler için Premium'a geçin' : 'Upgrade to Premium for percentages & tips'}
+        👑 ${isTR ? "Yüzdelik dağılım ve öneriler için Premiyuma geçin" : "Upgrade to Premium for percentages & tips"}
       </div>
       <div class="soft-note">${t('cryResultNote')}</div>`;
   }

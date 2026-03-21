@@ -36,7 +36,7 @@ window.I18N = {
     sectionReadWithVoice: 'Sesimle Oku',
 
     /* Premium */
-    trialBadge: '3 Gün Ücretsiz', premiumBadge: 'Sınırsız',
+    trialBadge: '3 Gün Ücretsiz', premiumBadge: 'Premium',
     lockedBadge: 'Premium', trialHeader: 'Deneme',
     trialActive: (d) => `${d} gün ücretsiz deneme kaldı`,
     trialSub: 'Tüm premium özellikleri deneyin',
@@ -143,7 +143,7 @@ window.I18N = {
     sectionVoiceCloning: 'Voice Cloning',
     sectionReadWithVoice: 'Read In My Voice',
 
-    trialBadge: '3 Day Trial', premiumBadge: 'Unlimited',
+    trialBadge: '3 Day Trial', premiumBadge: 'Premium',
     lockedBadge: 'Premium', trialHeader: 'Trial',
     trialActive: (d) => `${d} day${d===1?'':'s'} free trial left`,
     trialSub: 'Try all premium features',

@@ -264,6 +264,12 @@ window.updateLanguageUI = function() {
 
   // Bölüm başlıkları — güvenli güncelleme
   _st('lullaby-section-title',   isTR ? t('sectionLullabiesTR') : t('sectionLullabiesEN'));
+  const ninBadge = document.getElementById('ninniler-badge');
+  if (ninBadge) {
+    ninBadge.textContent = isTR ? 'Ücretsiz' : 'Free';
+    ninBadge.style.background = 'rgba(93,216,168,0.2)';
+    ninBadge.style.color = 'var(--mint)';
+  }
   _st('voice-section-title',     t('sectionVoiceLullabies'));
   _st('stories-section-title',   t('sectionStories'));
   _st('whitenoise-section-title',t('sectionWhiteNoise'));
