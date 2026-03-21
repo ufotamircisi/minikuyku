@@ -516,8 +516,9 @@ function _renderCryResult(analysis){
         poop:    'Check the diaper, there may be bloating.',
       }
     };
-    const tipKey = Object.keys({hunger:'',gas:'',sleepy:'',pee:'',poop:''})
-      .find(k => (isTR ? t('cryLabels').tr?.[k] : t('cryLabels').en?.[k]) === topReason?.label) || 'hunger';
+    // Find tip by matching label to cryLabels
+    const labels = t('cryLabels');
+    const tipKey = Object.keys(labels).find(k => labels[k] === topReason?.label) || 'hunger';
     const tip = (isTR ? tips.tr : tips.en)[tipKey] || '';
 
     el.innerHTML = analysis.map(item => `

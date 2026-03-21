@@ -361,6 +361,7 @@ window.updateLanguageUI = function() {
   renderRecordings();
   updateCloneSection();
   renderExpertTips();
+  if (typeof renderSleepStats === 'function') renderSleepStats();
   updatePremiumUI();
   updateTrialUI();
   updateOnboardingLanguage();
