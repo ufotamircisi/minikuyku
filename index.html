@@ -27,9 +27,9 @@
 <!-- ── Header ────────────────────────────────────────────────── -->
 <div class="header">
   <div class="logo">
-    <span class="logo-moon">🌙</span>
+    <img src="./icons/icon-192.png" alt="LumiBaby" class="logo-img">
     <div class="logo-stack">
-      <span class="logo-text">Minik Uyku</span>
+      <span class="logo-text" id="app-name-text">Minik Uyku</span>
       <span class="logo-subtext">LumiBaby</span>
     </div>
   </div>
@@ -101,8 +101,6 @@
 
     <div class="timer-section">
       <button class="timer-btn" onclick="toggleTimer()" type="button">⏱ Zamanlayıcı</button>
-      <button class="timer-btn" onclick="toggleCryDetector()" id="cry-detector-btn" type="button">🎙 Ağlama Dedektörü</button>
-      <button class="timer-btn" onclick="toggleKolikDetector()" id="kolik-detector-btn" type="button">🌿 Kolik Kriz Dedektörü</button>
     </div>
 
     <div class="timer-picker" id="timer-picker">
@@ -272,6 +270,11 @@
     <div class="section-title" id="recentsleep-section-title">Son Uykular</div>
     <div class="sleep-list" id="sleep-list">
       <div class="empty-state"><div class="empty-icon">🌙</div><div class="empty-text">Henüz uyku kaydı yok</div></div>
+    </div>
+
+    <div class="section-title" id="night-history-title">Geçmiş Geceler <span class="premium-badge" id="night-history-badge">👑 Premium</span></div>
+    <div id="night-history-list">
+      <div class="empty-state"><div class="empty-icon">🌙</div><div class="empty-text" id="night-history-empty">Henüz gece kaydı yok</div></div>
     </div>
 
     <div class="section-title" id="experttips-section-title">Uzman Önerileri</div>
@@ -482,13 +485,16 @@
     </div>
 
     <div class="ob-slide" data-step="3">
-      <div class="ob-hero">✨</div>
-      <h2 id="ob-title-3">3 gün ücretsiz dene</h2>
-      <p id="ob-desc-3">Uyku takibi, ninniler, masallar ve analiz özelliklerini dene.</p>
+      <div class="ob-hero">🌙</div>
+      <h2 id="ob-title-3">Gece Takibi</h2>
+      <p id="ob-desc-3">Anne başlatır, uygulama geceyi takip eder, sabah rapor verir.</p>
       <div class="ob-cards">
-        <div class="ob-card"><strong id="ob-card-3a">Uyku takibi</strong><span id="ob-card-3b">Oturumları kaydet ve basit analizleri gör.</span></div>
-        <div class="ob-card"><strong id="ob-card-3c">Hazırsan başlayalım</strong><span id="ob-card-3d">Dili daha sonra da değiştirebilirsin.</span></div>
+        <div class="ob-card" id="ob-card-3a">😴 "Bebeğim Uyudu" butonuna bas, oturum başlar</div>
+        <div class="ob-card" id="ob-card-3b">🎙 Ağlama veya kolik dedektörünü seç</div>
+        <div class="ob-card" id="ob-card-3c">📊 Uygulama gece boyu izler ve rapor tutar</div>
+        <div class="ob-card" id="ob-card-3d">🌅 Sabah "Bebeğim Uyandı" ile gece özeti gelir</div>
       </div>
+      <p style="font-size:11px;color:var(--text-muted);margin-top:8px;text-align:center" id="ob-note-3">💡 Ayarlar → Bebek → "Karşılama ekranını göster" ile tekrar açabilirsiniz.</p>
       <div class="input-group" style="margin-top:8px">
         <label class="input-label">Bebek adı</label>
         <input type="text" class="input-field" id="onboard-baby-name" placeholder="Örn: Ayşe / Emma" maxlength="15">

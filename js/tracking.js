@@ -124,8 +124,22 @@ function _endNightSession() {
   state.nightSession.endTime = Date.now();
   saveState('minikuyku_night_session', state.nightSession);
 
+  // Skoru hesapla
+  const wakeCount  = state.nightSession.wakeCount;
+  const calmTimes  = state.nightSession.calmTimes;
+  const avgCalm    = calmTimes.length ? Math.round(calmTimes.reduce((a,b)=>a+b,0)/calmTimes.length) : 0;
+  const totalSec   = Math.floor((state.nightSession.endTime - state.nightSession.startTime) / 1000);
+  const score      = calcNightScore(wakeCount, avgCalm, 0, totalSec);
+  const evaluation = _getNightEvaluation(wakeCount, avgCalm, totalSec, state.language === 'tr');
+
+  // Raporu kaydet
+  _saveNightReport(state.nightSession, score, evaluation);
+
   // Raporu göster
   _showNightReport(state.nightSession);
+  
+  // Geçmişi güncelle
+  if (typeof renderNightHistory === 'function') renderNightHistory();
 
   // Dedektörleri kapat
   if (state.cryDetector?.active) _stopDet && _stopDet('cryDetector');
@@ -335,6 +349,7 @@ window.renderSleepStats = function() {
   _renderChart(isPremium);
   _renderTrend(isPremium, isTR);
   renderSleepList();
+  if (typeof renderNightHistory === 'function') renderNightHistory();
 
   const title = document.getElementById('analysis-main-title');
   const sub   = document.getElementById('analysis-main-sub');
@@ -508,6 +523,89 @@ function renderSleepList() {
     const time=new Date(s.start).toLocaleTimeString(locale,{hour:'2-digit',minute:'2-digit'});
     return `<div class="sleep-item"><span class="sleep-item-icon">🌙</span><div class="sleep-item-info"><div class="sleep-item-time">${date} · ${time}</div><div class="sleep-item-dur">${formatTime(s.duration)}</div></div></div>`;
   }).join('');
+}
+
+/* ════════════════════════════════════════════════════════════════
+   GECE GEÇMİŞİ
+   ════════════════════════════════════════════════════════════════ */
+function _saveNightReport(session, score, evaluation) {
+  const reports = JSON.parse(localStorage.getItem('minikuyku_night_reports') || '[]');
+  reports.unshift({
+    date: new Date(session.startTime).toISOString(),
+    totalSec: Math.floor((session.endTime - session.startTime) / 1000),
+    wakeCount: session.wakeCount,
+    calmTimes: session.calmTimes,
+    score: score,
+    evaluation: evaluation,
+    mode: session.mode
+  });
+  localStorage.setItem('minikuyku_night_reports', JSON.stringify(reports.slice(0, 30)));
+}
+
+window.renderNightHistory = function() {
+  const list    = document.getElementById('night-history-list');
+  const title   = document.getElementById('night-history-title');
+  const badge   = document.getElementById('night-history-badge');
+  const empty   = document.getElementById('night-history-empty');
+  if (!list) return;
+
+  const isTR    = state.language === 'tr';
+  const isPrem  = hasAccess() && state.isPremium;
+  const reports = JSON.parse(localStorage.getItem('minikuyku_night_reports') || '[]');
+
+  // Başlık
+  if (title) {
+    const firstChild = title.firstChild;
+    if (firstChild && firstChild.nodeType === Node.TEXT_NODE)
+      firstChild.textContent = (isTR ? 'Geçmiş Geceler ' : 'Night History ');
+  }
+  if (badge) badge.textContent = isPrem ? '' : '👑 Premium';
+  if (empty) empty.textContent = isTR ? 'Henüz gece kaydı yok' : 'No night records yet';
+
+  if (!reports.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">🌙</div><div class="empty-text">${isTR ? 'Henüz gece kaydı yok' : 'No night records yet'}</div></div>`;
+    return;
+  }
+
+  if (!isPrem) {
+    // Ücretsiz: sadece son 1 gece göster
+    const r = reports[0];
+    list.innerHTML = _renderNightCard(r, isTR) + `
+      <div class="analysis-free-upgrade" onclick="showPremiumModal()" style="margin-top:10px">
+        👑 ${isTR ? "7/30 günlük geçmiş için Premiyuma geçin" : "Upgrade to Premium for 7/30-day history"}
+      </div>`;
+  } else {
+    // Premium: son 30 gece
+    list.innerHTML = reports.map(r => _renderNightCard(r, isTR)).join('');
+  }
+};
+
+function _renderNightCard(r, isTR) {
+  const date   = new Date(r.date).toLocaleDateString(isTR ? 'tr-TR' : 'en-US', { weekday:'short', month:'short', day:'numeric' });
+  const total  = formatTime(r.totalSec);
+  const wakes  = r.wakeCount;
+  const score  = r.score;
+  const scoreColor = score >= 85 ? 'var(--mint)' : score >= 70 ? 'var(--accent-light)' : score >= 50 ? 'var(--gold)' : 'var(--rose)';
+  const status = scoreStatus(score, isTR ? 'tr' : 'en');
+
+  return `<div class="night-history-card">
+    <div class="night-history-date">${date}</div>
+    <div class="night-history-stats">
+      <div class="night-stat">
+        <div class="night-stat-val">${total}</div>
+        <div class="night-stat-lbl">${isTR ? 'Uyku' : 'Sleep'}</div>
+      </div>
+      <div class="night-stat">
+        <div class="night-stat-val">${wakes}</div>
+        <div class="night-stat-lbl">${isTR ? 'Uyanma' : 'Wakes'}</div>
+      </div>
+      ${score !== undefined ? `<div class="night-stat">
+        <div class="night-stat-val" style="color:${scoreColor}">${score}</div>
+        <div class="night-stat-lbl">${isTR ? 'Skor' : 'Score'}</div>
+      </div>` : ''}
+    </div>
+    ${r.evaluation ? `<div class="night-history-summary">${r.evaluation.summary}</div>` : ''}
+  </div>`;
 }
 
 /* ── Uzman önerileri ─────────────────────────────────────────── */
