@@ -59,17 +59,18 @@ window.state = {
   _initializedPages: { ninniler: true, hikayeler: false, kolik: false, takip: false, sesim: false },
   _previewTimer: null,
 
-  // Gece oturumu
-  nightSession: {
-    active: false,
-    startTime: null,
-    mode: null,          // 'cry' | 'colic' | null
-    events: [],          // { type, time, duration }
-    wakeCount: 0,
-    calmTimes: [],
-    lastWakeTime: null,
-    lastCalmTime: null,
-  },
+  // Gece oturumu — localStorage'dan yükle
+  nightSession: (function() {
+    try {
+      const saved = localStorage.getItem('minikuyku_night_session');
+      if (saved) return JSON.parse(saved);
+    } catch(e) {}
+    return {
+      active: false, startTime: null, mode: null,
+      events: [], wakeCount: 0, calmTimes: [],
+      lastWakeTime: null, lastCalmTime: null
+    };
+  })(),
   _previewTimer: null
 };
 
