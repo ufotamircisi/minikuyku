@@ -544,41 +544,79 @@ function _saveNightReport(session, score, evaluation) {
 }
 
 window.renderNightHistory = function() {
-  const list    = document.getElementById('night-history-list');
-  const title   = document.getElementById('night-history-title');
-  const badge   = document.getElementById('night-history-badge');
-  const empty   = document.getElementById('night-history-empty');
+  const list  = document.getElementById('night-history-list');
+  const badge = document.getElementById('night-history-badge');
   if (!list) return;
 
-  const isTR    = state.language === 'tr';
-  const isPrem  = hasAccess() && state.isPremium;
+  const isTR   = state.language === 'tr';
+  const isPrem = hasAccess() && state.isPremium;
   const reports = JSON.parse(localStorage.getItem('minikuyku_night_reports') || '[]');
 
-  // Başlık
-  if (title) {
-    const firstChild = title.firstChild;
-    if (firstChild && firstChild.nodeType === Node.TEXT_NODE)
-      firstChild.textContent = (isTR ? 'Geçmiş Geceler ' : 'Night History ');
-  }
   if (badge) badge.textContent = isPrem ? '' : '👑 Premium';
-  if (empty) empty.textContent = isTR ? 'Henüz gece kaydı yok' : 'No night records yet';
 
   if (!reports.length) {
     list.innerHTML = `<div class="empty-state"><div class="empty-icon">🌙</div><div class="empty-text">${isTR ? 'Henüz gece kaydı yok' : 'No night records yet'}</div></div>`;
     return;
   }
 
-  if (!isPrem) {
-    // Ücretsiz: sadece son 1 gece göster
-    const r = reports[0];
-    list.innerHTML = _renderNightCard(r, isTR) + `
-      <div class="analysis-free-upgrade" onclick="showPremiumModal()" style="margin-top:10px">
-        👑 ${isTR ? "7/30 günlük geçmiş için Premiyuma geçin" : "Upgrade to Premium for 7/30-day history"}
-      </div>`;
-  } else {
-    // Premium: son 30 gece
-    list.innerHTML = reports.map(r => _renderNightCard(r, isTR)).join('');
+  const shown = isPrem ? reports : reports.slice(0, 1);
+  list.innerHTML = shown.map((r, i) => _renderNightRow(r, isTR, i)).join('') +
+    (!isPrem ? `<div class="analysis-free-upgrade" onclick="showPremiumModal()" style="margin-top:8px">
+      👑 ${isTR ? "Tüm geçmiş için Premiyuma geçin" : "Upgrade to Premium for full history"}
+    </div>` : '');
+};
+
+window.showNightDetail = function(idx) {
+  const reports = JSON.parse(localStorage.getItem('minikuyku_night_reports') || '[]');
+  const r = reports[idx];
+  if (!r) return;
+  const isTR = state.language === 'tr';
+  const score = r.score;
+  const scoreColor = score >= 85 ? 'var(--mint)' : score >= 70 ? 'var(--accent-light)' : score >= 50 ? 'var(--gold)' : 'var(--rose)';
+  const status = scoreStatus(score, isTR ? 'tr' : 'en');
+  const avgCalm = r.calmTimes && r.calmTimes.length ? Math.round(r.calmTimes.reduce((a,b)=>a+b,0)/r.calmTimes.length) : 0;
+
+  let modal = document.getElementById('night-detail-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'night-detail-modal';
+    modal.className = 'modal';
+    modal.style.cssText = 'align-items:flex-start;padding-top:40px';
+    modal.onclick = function(e) { if (e.target === modal) modal.classList.remove('show'); };
+    document.body.appendChild(modal);
   }
+
+  const L = isTR ? {
+    title:'Gece Detayı', close:'Kapat',
+    total:'Toplam Uyku', wakes:'Uyanma',
+    calm:'Ort. Sakinleşme', score:'Uyku Skoru',
+    summary:'Gece Özeti', note:'Not', min:'dk', times:'kez'
+  } : {
+    title:'Night Detail', close:'Close',
+    total:'Total Sleep', wakes:'Wake-ups',
+    calm:'Avg. Calm Time', score:'Sleep Score',
+    summary:'Night Summary', note:'Note', min:'min', times:'times'
+  };
+
+  modal.innerHTML = `<div class="modal-content" style="max-height:80vh;overflow-y:auto">
+    <div style="text-align:center;margin-bottom:16px;font-size:18px;font-weight:700;color:var(--accent-light)">🌙 ${L.title}</div>
+    <div style="font-size:12px;color:var(--text-muted);text-align:center;margin-bottom:16px">
+      ${new Date(r.date).toLocaleDateString(isTR?'tr-TR':'en-US',{weekday:'long',month:'long',day:'numeric'})}
+    </div>
+    <div class="lastnight-grid" style="margin-bottom:14px">
+      <div class="lastnight-item"><div class="lastnight-value">${formatTime(r.totalSec)}</div><div class="lastnight-label">${L.total}</div></div>
+      <div class="lastnight-item"><div class="lastnight-value">${r.wakeCount} ${L.times}</div><div class="lastnight-label">${L.wakes}</div></div>
+      <div class="lastnight-item"><div class="lastnight-value">${avgCalm||'--'}${avgCalm?' '+L.min:''}</div><div class="lastnight-label">${L.calm}</div></div>
+      <div class="lastnight-item"><div class="lastnight-value" style="color:${scoreColor}">${score}</div><div class="lastnight-label">${L.score}</div></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:14px">
+      <div style="font-weight:700;color:var(--accent-light);margin-bottom:8px">${status.text}</div>
+      ${r.evaluation ? `<div style="font-size:13px;margin-bottom:4px"><strong>${L.summary}:</strong> ${r.evaluation.summary}</div>
+      <div style="font-size:12px;color:var(--text-muted)"><strong>${L.note}:</strong> ${r.evaluation.note}</div>` : ''}
+    </div>
+    <button class="btn-secondary" onclick="document.getElementById('night-detail-modal').classList.remove('show')" type="button">${L.close}</button>
+  </div>`;
+  modal.classList.add('show');
 };
 
 function _renderNightCard(r, isTR) {
