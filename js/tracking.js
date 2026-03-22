@@ -582,30 +582,32 @@ window.renderNightHistory = function() {
 };
 
 function _renderNightCard(r, isTR) {
-  const date   = new Date(r.date).toLocaleDateString(isTR ? 'tr-TR' : 'en-US', { weekday:'short', month:'short', day:'numeric' });
-  const total  = formatTime(r.totalSec);
-  const wakes  = r.wakeCount;
-  const score  = r.score;
+  const date  = new Date(r.date).toLocaleDateString(isTR ? 'tr-TR' : 'en-US', { weekday:'long', month:'long', day:'numeric' });
+  const total = formatTime(r.totalSec);
+  const score = r.score;
   const scoreColor = score >= 85 ? 'var(--mint)' : score >= 70 ? 'var(--accent-light)' : score >= 50 ? 'var(--gold)' : 'var(--rose)';
   const status = scoreStatus(score, isTR ? 'tr' : 'en');
 
   return `<div class="night-history-card">
-    <div class="night-history-date">${date}</div>
+    <div class="night-history-header">
+      <div class="night-history-date">🌙 ${date}</div>
+      ${score !== undefined ? `<div class="night-history-score" style="color:${scoreColor}">${score}/100</div>` : ''}
+    </div>
     <div class="night-history-stats">
       <div class="night-stat">
         <div class="night-stat-val">${total}</div>
-        <div class="night-stat-lbl">${isTR ? 'Uyku' : 'Sleep'}</div>
+        <div class="night-stat-lbl">${isTR ? 'Toplam Uyku' : 'Total Sleep'}</div>
       </div>
       <div class="night-stat">
-        <div class="night-stat-val">${wakes}</div>
-        <div class="night-stat-lbl">${isTR ? 'Uyanma' : 'Wakes'}</div>
+        <div class="night-stat-val">${r.wakeCount}</div>
+        <div class="night-stat-lbl">${isTR ? 'Uyanma' : 'Wake-ups'}</div>
       </div>
-      ${score !== undefined ? `<div class="night-stat">
-        <div class="night-stat-val" style="color:${scoreColor}">${score}</div>
-        <div class="night-stat-lbl">${isTR ? 'Skor' : 'Score'}</div>
-      </div>` : ''}
+      <div class="night-stat">
+        <div class="night-stat-val" style="color:${scoreColor}">${status.text}</div>
+        <div class="night-stat-lbl">${isTR ? 'Durum' : 'Status'}</div>
+      </div>
     </div>
-    ${r.evaluation ? `<div class="night-history-summary">${r.evaluation.summary}</div>` : ''}
+    ${r.evaluation ? `<div class="night-history-summary">💬 ${r.evaluation.summary}</div>` : ''}
   </div>`;
 }
 
