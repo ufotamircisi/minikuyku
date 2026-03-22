@@ -484,10 +484,15 @@ window.startCryAnalysis = async function() {
 
 function _classifyCry(samples){
   const aL=averageArray(samples.map(s=>s.low)),aM=averageArray(samples.map(s=>s.mid)),aH=averageArray(samples.map(s=>s.high)),aP=averageArray(samples.map(s=>s.peak));
-  const labels=t('cryLabels');
-  const raw=[{key:'hunger',value:20+aM*0.22+aP*0.10},{key:'gas',value:18+aH*0.20+(aP-aL)*0.08},{key:'sleepy',value:18+aL*0.24+Math.max(0,aM-aH)*0.06},{key:'pee',value:14+aM*0.10+aL*0.08},{key:'poop',value:12+aL*0.12+aH*0.10}];
+  const isTR = state.language === 'tr';
+  const raw=[
+    {label: isTR?'Açlık':'Hunger',       value:20+aM*0.22+aP*0.10},
+    {label: isTR?'Gaz':'Gas',            value:18+aH*0.20+(aP-aL)*0.08},
+    {label: isTR?'Uykusuzluk':'Sleepy',  value:18+aL*0.24+Math.max(0,aM-aH)*0.06},
+    {label: isTR?'Islak Bez':'Wet Diaper', value:14+aM*0.10+aL*0.08+12+aL*0.12+aH*0.10},
+  ];
   const total=raw.reduce((a,b)=>a+b.value,0)||1;
-  let norm=raw.map(r=>({label:labels[r.key]||r.key,value:Math.round(r.value*100/total)}));
+  let norm=raw.map(r=>({label:r.label, value:Math.round(r.value*100/total)}));
   norm[0].value+=100-norm.reduce((a,b)=>a+b.value,0);
   return norm.sort((a,b)=>b.value-a.value);
 }
