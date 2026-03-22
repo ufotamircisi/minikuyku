@@ -636,7 +636,7 @@ window.showNightDetail = function(idx) {
   modal.classList.add('show');
 };
 
-function _renderNightCard(r, isTR) {
+function _renderNightRow(r, isTR, idx) {
   const date  = new Date(r.date).toLocaleDateString(isTR ? 'tr-TR' : 'en-US', { weekday:'long', month:'long', day:'numeric' });
   const total = formatTime(r.totalSec);
   const score = r.score;
