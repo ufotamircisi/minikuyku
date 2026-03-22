@@ -564,7 +564,10 @@ window.renderNightHistory = function() {
 
   const isTR   = state.language === 'tr';
   const isPrem = hasAccess() && state.isPremium;
-  const reports = JSON.parse(localStorage.getItem('minikuyku_night_reports') || '[]');
+  // Geçersiz formatları temizle (totalSec > 86400 = 24 saatten fazla = hatalı)
+  let reports = JSON.parse(localStorage.getItem('minikuyku_night_reports') || '[]');
+  reports = reports.filter(r => r.totalSec < 86400 && r.date && r.score !== undefined);
+  localStorage.setItem('minikuyku_night_reports', JSON.stringify(reports));
 
   if (badge) badge.textContent = isPrem ? '' : '👑 Premium';
   // Title güncelle
