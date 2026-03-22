@@ -696,3 +696,50 @@ body {
 /* ── Logo tek satır ──────────────────────────────────────────── */
 .logo-subtext { display: none !important; }
 .logo-text { font-size: 15px !important; white-space: nowrap !important; }
+
+/* ── Yeni header layout ──────────────────────────────────────── */
+.header {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  padding: 10px 14px 8px !important;
+  gap: 6px !important;
+}
+.header-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.header-logo-row .logo-moon { font-size: 22px; }
+.header-logo-row .logo-text {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 17px; font-weight: 700;
+  background: linear-gradient(135deg, var(--text), var(--accent));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+}
+.header-btn-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: nowrap;
+}
+.header-btn-row .header-btn {
+  padding: 5px 10px !important;
+  font-size: 11px !important;
+}
+.header-btn-row .lang-chip {
+  padding: 4px 9px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.05);
+  color: var(--text-muted);
+  font-size: 11px; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+  transition: all var(--transition);
+}
+.header-btn-row .lang-chip.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(157,140,239,0.15);
+}

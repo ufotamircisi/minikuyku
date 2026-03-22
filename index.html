@@ -26,44 +26,23 @@
 
 <!-- ── Header ────────────────────────────────────────────────── -->
 <div class="header">
-  <div class="logo">
+  <div class="header-logo-row">
     <span class="logo-moon">🌙</span>
-    <div class="logo-stack">
-      <span class="logo-text" id="app-name-text">Minik Uyku – LumiBaby</span>
-    </div>
+    <span class="logo-text" id="app-name-text">Minik Uyku – LumiBaby</span>
   </div>
-  <div class="header-btns">
-    <div class="lang-switch compact-lang-switch">
-      <button type="button" class="lang-chip compact-lang-chip active" id="lang-tr" onclick="setLanguage('tr')">TR</button>
-      <button type="button" class="lang-chip compact-lang-chip"        id="lang-en" onclick="setLanguage('en')">EN</button>
-    </div>
-    <button class="header-btn premium" onclick="showPremiumModal()" id="premium-btn">
-      <span>👑</span> <span id="premium-text">Premium</span>
-    </button>
+  <div class="header-btn-row">
     <button class="header-btn" onclick="showSettings()">
       <span>👶</span> <span id="baby-name-display">Bebek</span>
+    </button>
+    <button type="button" class="lang-chip active" id="lang-tr" onclick="setLanguage('tr')">TR</button>
+    <button type="button" class="lang-chip" id="lang-en" onclick="setLanguage('en')">EN</button>
+    <button class="header-btn premium" onclick="showPremiumModal()" id="premium-btn">
+      <span>👑</span> <span id="premium-text">Premium</span>
     </button>
   </div>
 </div>
 
-<!-- ── Üst navigasyon ────────────────────────────────────────── -->
-<div class="nav">
-  <div class="nav-item active" onclick="goToPage('ninniler',this,0)">
-    <span class="nav-icon">🎵</span><span class="nav-label">Ninniler</span>
-  </div>
-  <div class="nav-item" onclick="goToPage('hikayeler',this,1)">
-    <span class="nav-icon">📖</span><span class="nav-label">Hikayeler</span>
-  </div>
-  <div class="nav-item" onclick="goToPage('kolik',this,2)">
-    <span class="nav-icon">🌿</span><span class="nav-label">Kolik</span>
-  </div>
-  <div class="nav-item" onclick="goToPage('takip',this,3)">
-    <span class="nav-icon">📊</span><span class="nav-label">Analiz</span>
-  </div>
-  <div class="nav-item" onclick="goToPage('sesim',this,4)">
-    <span class="nav-icon">🎙️</span><span class="nav-label">Sesim</span>
-  </div>
-</div>
+
 
 <!-- ══════════════════════════════════════════════════════════════
      İÇERİK ALANI

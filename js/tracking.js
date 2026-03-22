@@ -532,7 +532,7 @@ function renderSleepList() {
     return;
   }
   const locale=state.language==='tr'?'tr-TR':'en-US';
-  list.innerHTML=state.sleepTracking.history.slice(0,10).map(s=>{
+  list.innerHTML=state.sleepTracking.history.slice(0,5).map(s=>{
     const date=new Date(s.start).toLocaleDateString(locale,{month:'short',day:'numeric'});
     const time=new Date(s.start).toLocaleTimeString(locale,{hour:'2-digit',minute:'2-digit'});
     return `<div class="sleep-item"><span class="sleep-item-icon">🌙</span><div class="sleep-item-info"><div class="sleep-item-time">${date} · ${time}</div><div class="sleep-item-dur">${formatTime(s.duration)}</div></div></div>`;
