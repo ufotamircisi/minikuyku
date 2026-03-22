@@ -36,17 +36,17 @@ window.updatePremiumUI = function() {
   if (state.isPremium) {
     btn.classList.add('premium');
     text.textContent = t('premiumBadge');
-    if (ninBadge) { ninBadge.textContent = t('unlimited'); ninBadge.style.background = 'var(--mint)'; ninBadge.style.color = '#0a0e1a'; }
+    if (ninBadge) { ninBadge.textContent = t('free'); ninBadge.style.background = 'rgba(93,216,168,0.2)'; ninBadge.style.color = 'var(--mint)'; }
     if (hikBadge) { hikBadge.textContent = t('unlimited'); hikBadge.style.background = 'var(--mint)'; hikBadge.style.color = '#0a0e1a'; }
   } else if (isTrialActive()) {
     btn.classList.add('premium');
     text.textContent = t('trialHeader');
-    if (ninBadge) { ninBadge.textContent = t('trial'); ninBadge.style.background = ''; ninBadge.style.color = ''; }
+    if (ninBadge) { ninBadge.textContent = t('free'); ninBadge.style.background = 'rgba(93,216,168,0.2)'; ninBadge.style.color = 'var(--mint)'; }
     if (hikBadge) { hikBadge.textContent = t('trial'); hikBadge.style.background = ''; hikBadge.style.color = ''; }
   } else {
     btn.classList.remove('premium');
     text.textContent = t('premium');
-    if (ninBadge) { ninBadge.textContent = t('locked'); ninBadge.style.background = ''; ninBadge.style.color = ''; }
+    if (ninBadge) { ninBadge.textContent = t('free'); ninBadge.style.background = 'rgba(93,216,168,0.2)'; ninBadge.style.color = 'var(--mint)'; }
     if (hikBadge) { hikBadge.textContent = t('locked'); hikBadge.style.background = ''; hikBadge.style.color = ''; }
   }
 };
