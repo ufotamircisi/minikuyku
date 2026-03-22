@@ -626,6 +626,8 @@ window.toggleCryDetector = async function() {
         if (isCrying && !_cryDetected && !state.isPlaying) {
           _cryDetected = true;
           _playing     = true;
+          // Gece oturumuna kaydet
+          window.recordNightEvent && recordNightEvent('wake', { source: 'cry' });
           showToast(state.language==='tr'
             ? '🎙 Ağlama tespit edildi! Ninni başlıyor...'
             : '🎙 Crying detected! Starting lullaby...');
@@ -642,7 +644,8 @@ window.toggleCryDetector = async function() {
             }, 15 * 60 * 1000);
           }
         } else if (!isCrying && _playing && !state.isPlaying) {
-          // Premium: ninni bitti, bebek sakinleşti → tekrar dinle
+          // Bebek sakinleşti → kaydet
+          window.recordNightEvent && recordNightEvent('calm', { source: 'cry' });
           _playing     = false;
           _cryDetected = false;
         } else if (!isCrying) {

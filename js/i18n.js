@@ -53,8 +53,8 @@ window.I18N = {
     yearlySave: 'Yıllık tasarruf',
 
     /* Uyku takibi */
-    trackingAwake: 'Bebek uyanık', trackingAsleep: 'Bebek uyuyor',
-    sleepWent: 'Uykuya Geçti', wakeUp: 'Uyandı',
+    trackingAwake: 'Bebeğim uyanık', trackingAsleep: 'Bebeğim uyuyor',
+    sleepWent: 'Bebeğim Uyudu', wakeUp: 'Bebeğim Uyandı',
     totalSleep: 'Toplam Uyku', sleepCount: 'Uyku Sayısı',
     average: 'Ortalama', wakeCount: 'Uyanma',
     noSleepRecords: 'Henüz uyku kaydı yok',

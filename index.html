@@ -200,11 +200,24 @@
     </div>
 
     <div class="sleep-tracker">
-      <div class="sleep-status" id="sleep-status">Bebek uyanık</div>
+      <div class="sleep-status" id="sleep-status">Bebeğim uyanık</div>
       <div class="sleep-clock" id="sleep-clock">0:00</div>
       <button class="btn-secondary" id="sleep-btn" onclick="toggleSleep()" type="button">
-        <span>😴</span> Uykuya Geçti
+        <span>😴</span> Bebeğim Uyudu
       </button>
+    </div>
+
+    <!-- Gece modu seçici -->
+    <div id="night-mode-selector" style="display:none;margin-bottom:16px">
+      <div class="night-mode-title" id="night-mode-title">🌙 Gece modunu seçin:</div>
+      <div class="night-mode-btns">
+        <button class="night-mode-btn" id="night-mode-cry" onclick="selectNightMode('cry')" type="button">
+          🎵 Ağlama Dedektörü<small>Ağlayınca ninni başlar</small>
+        </button>
+        <button class="night-mode-btn" id="night-mode-colic" onclick="selectNightMode('colic')" type="button">
+          🌿 Kolik Dedektörü<small>Ağlayınca beyaz gürültü başlar</small>
+        </button>
+      </div>
     </div>
 
     <div class="section-title" id="lastnight-section-title">Dün Gece</div>
@@ -278,7 +291,7 @@
     <div class="section-title" id="voiceclone-section-title">Ses Klonlama <span class="premium-badge" id="voiceclone-badge">👑 Premium</span></div>
     <div class="voice-coming-card" id="clone-section">
       <div class="voice-coming-heart" id="clone-heart">💜</div>
-      <div class="voice-coming-title" id="clone-soon-title">Bebeğin annenin sesiyle uyusun</div>
+      <div class="voice-coming-title" id="clone-soon-title">Bebeğin annesinin sesiyle uyusun</div>
       <div class="voice-coming-desc" id="clone-soon-desc">Kendi sesinle söylediğin ninnilerle bebeğin daha hızlı sakinleşsin ve huzurla uyusun</div>
       <div class="voice-coming-lock" id="clone-lock-text">🔒 Premium'a özel – çok yakında</div>
       <button class="btn-primary" onclick="showPremiumModal()" type="button" id="clone-discover-btn">👑 Premium'u Keşfet</button>

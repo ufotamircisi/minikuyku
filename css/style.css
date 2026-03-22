@@ -637,3 +637,30 @@ body {
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   line-height: 1.5;
 }
+
+/* ── Gece modu seçici ────────────────────────────────────────── */
+.night-mode-title {
+  font-size: 14px; font-weight: 600; color: var(--accent-light);
+  margin-bottom: 12px; text-align: center;
+}
+.night-mode-btns {
+  display: flex; gap: 10px;
+}
+.night-mode-btn {
+  flex: 1; padding: 14px 10px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); cursor: pointer;
+  font-family: inherit; font-size: 13px; font-weight: 600;
+  color: var(--text); text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  transition: all var(--transition);
+}
+.night-mode-btn small {
+  font-size: 11px; font-weight: 400; color: var(--text-muted);
+}
+.night-mode-btn:hover { border-color: var(--accent); }
+.night-mode-btn.active {
+  border-color: var(--mint); background: rgba(93,216,168,0.1);
+  color: var(--mint);
+}
+.night-mode-btn.active small { color: var(--mint); }

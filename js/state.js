@@ -57,6 +57,19 @@ window.state = {
 
   // Lazy init takibi
   _initializedPages: { ninniler: true, hikayeler: false, kolik: false, takip: false, sesim: false },
+  _previewTimer: null,
+
+  // Gece oturumu
+  nightSession: {
+    active: false,
+    startTime: null,
+    mode: null,          // 'cry' | 'colic' | null
+    events: [],          // { type, time, duration }
+    wakeCount: 0,
+    calmTimes: [],
+    lastWakeTime: null,
+    lastCalmTime: null,
+  },
   _previewTimer: null
 };
 
