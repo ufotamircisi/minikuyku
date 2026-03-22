@@ -218,6 +218,7 @@ function _renderNightReportModal(data) {
     modal = document.createElement('div');
     modal.id = 'night-report-modal';
     modal.className = 'modal show';
+    modal.style.cssText = 'align-items:flex-start;padding-top:40px';
     modal.onclick = function(e) { if (e.target === modal) modal.classList.remove('show'); };
     document.body.appendChild(modal);
   }

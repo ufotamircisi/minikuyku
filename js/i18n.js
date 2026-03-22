@@ -83,7 +83,7 @@ window.I18N = {
     cryNote: 'Bu sonuçlar tıbbi teşhis değildir. Açlık, gaz, uykusuzluk, alt ıslaklığı veya kaka rahatsızlığı için fikir vermek üzere tasarlanmıştır.',
     cryResultNote: 'İlk sıradaki sonuç en olası tahmindir.',
     micPermRequired: 'Mikrofon izni gerekiyor.',
-    cryLabels: { hunger:'Açlık', gas:'Gaz', sleepy:'Uykusuzluk', pee:'Islak Bez', poop:'Bez Rahatsızlığı' },
+    cryLabels: { hunger:'Açlık', gas:'Gaz', sleepy:'Uykusuzluk', pee:'Islak Bez / Gaz', poop:'Islak Bez / Gaz' },
 
     /* Ayarlar */
     settingsTitle: 'Bebek Ayarları', settingsDesc: 'Kişiselleştirilmiş deneyim için',
@@ -187,7 +187,7 @@ window.I18N = {
     cryNote: 'These results are not a medical diagnosis. They are designed to offer a rough estimate for hunger, gas, sleepiness, wet diaper, or diaper discomfort.',
     cryResultNote: 'The top row is the most likely estimate.',
     micPermRequired: 'Microphone permission is required.',
-    cryLabels: { hunger:'Hunger', gas:'Gas', sleepy:'Sleepiness', pee:'Wet Diaper', poop:'Dirty Diaper' },
+    cryLabels: { hunger:'Hunger', gas:'Gas', sleepy:'Sleepiness', pee:'Wet/Dirty Diaper', poop:'Wet/Dirty Diaper' },
 
     settingsTitle: 'Baby Settings', settingsDesc: 'For a personalized experience',
     babyNameLabel: "Baby's Name", birthDateLabel: 'Birth Date',

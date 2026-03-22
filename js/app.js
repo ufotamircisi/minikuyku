@@ -108,6 +108,7 @@ function _lazyInitPage(page) {
       case 'takip':
         renderSleepStats();
         renderExpertTips();
+        if (typeof renderNightHistory === 'function') renderNightHistory();
         break;
       case 'sesim':
         renderRecordings();
