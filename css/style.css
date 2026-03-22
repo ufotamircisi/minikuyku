@@ -673,3 +673,26 @@ body {
 .logo-subtext { font-size: 11px !important; }
 .header-btn { padding: 6px 10px !important; font-size: 11px !important; }
 .header-btns { gap: 5px !important; }
+
+/* ── Gece geçmişi kart güncelleme ───────────────────────────── */
+.night-history-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px;
+}
+.night-history-score {
+  font-size: 18px; font-weight: 700;
+}
+.night-history-date {
+  font-size: 13px; font-weight: 600; color: var(--text);
+}
+.night-history-stats {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 8px; margin-bottom: 10px;
+}
+.night-stat { text-align: center; background: rgba(255,255,255,0.03); border-radius: 8px; padding: 8px 4px; }
+.night-stat-val { font-size: 15px; font-weight: 700; color: var(--accent-light); }
+.night-stat-lbl { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+
+/* ── Logo tek satır ──────────────────────────────────────────── */
+.logo-subtext { display: none !important; }
+.logo-text { font-size: 15px !important; white-space: nowrap !important; }

@@ -401,6 +401,11 @@ window.updateOnboardingLanguage = function() {
   const nameInput = document.getElementById('onboard-baby-name');
   if (nameInput) nameInput.placeholder = ob.babyNamePlaceholder || '';
   document.querySelectorAll('#app-onboarding .ghost-btn').forEach(b => { b.textContent = ob.back || 'Geri'; });
+  // Slide 3 notu
+  const note3 = document.getElementById('ob-note-3');
+  if (note3) note3.textContent = state.language === 'tr'
+    ? '💡 Anasayfa → Bebek → "Karşılama ekranını göster" ile tekrar açabilirsiniz.'
+    : '💡 Home → Baby → "Show welcome screen" to open again.';
   document.querySelectorAll('#app-onboarding .ob-actions .btn-primary').forEach((b, i, arr) => {
     b.textContent = (i === arr.length - 1 && b.getAttribute('onclick')?.includes('finishOnboarding')) ? (ob.start||'Başla') : (ob.next||'İleri');
   });
