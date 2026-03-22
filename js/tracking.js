@@ -23,6 +23,19 @@ function _startSleep() {
     if (clock) clock.textContent = formatTime(secs);
   }, 1000);
 
+  // Gece oturumunu hemen başlat (mod seçimi olmadan da kayıt edilsin)
+  state.nightSession = {
+    active: true,
+    startTime: Date.now(),
+    mode: null,
+    events: [],
+    wakeCount: 0,
+    calmTimes: [],
+    lastWakeTime: null,
+    lastCalmTime: null,
+  };
+  saveState('minikuyku_night_session', state.nightSession);
+
   // Gece modu seçici göster
   _showNightModeSelector();
 }
@@ -546,6 +559,7 @@ function _saveNightReport(session, score, evaluation) {
 window.renderNightHistory = function() {
   const list  = document.getElementById('night-history-list');
   const badge = document.getElementById('night-history-badge');
+  const titleEl = document.getElementById('night-history-title');
   if (!list) return;
 
   const isTR   = state.language === 'tr';
@@ -553,9 +567,12 @@ window.renderNightHistory = function() {
   const reports = JSON.parse(localStorage.getItem('minikuyku_night_reports') || '[]');
 
   if (badge) badge.textContent = isPrem ? '' : '👑 Premium';
+  // Title güncelle
+  if (titleEl && titleEl.firstChild && titleEl.firstChild.nodeType === Node.TEXT_NODE)
+    titleEl.firstChild.textContent = (isTR ? 'Geçmiş Geceler ' : 'Night History ');
 
   if (!reports.length) {
-    list.innerHTML = `<div class="empty-state"><div class="empty-icon">🌙</div><div class="empty-text">${isTR ? 'Henüz gece kaydı yok' : 'No night records yet'}</div></div>`;
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">🌙</div><div class="empty-text">' + (isTR ? 'Henüz gece kaydı yok' : 'No night records yet') + '</div></div>';
     return;
   }
 

@@ -120,7 +120,7 @@ window.updateCloneSection = function() {
   const cloneDiscover  = document.getElementById('clone-discover-btn');
   const cloneInfo      = document.getElementById('clone-info-text');
   if (cloneSoonTitle) cloneSoonTitle.textContent = isTR
-    ? 'Bebeğin annenin sesiyle uyusun'
+    ? 'Bebeğin annesinin sesiyle uyusun'
     : 'Let your baby sleep in your voice';
   if (cloneSoonDesc) cloneSoonDesc.textContent = isTR
     ? 'Kendi sesinle söylediğin ninnilerle bebeğin daha hızlı sakinleşsin ve huzurla uyusun'
@@ -284,7 +284,7 @@ window.updateLanguageUI = function() {
   const cloneSoonDesc  = document.getElementById('clone-soon-desc');
   const cloneSoonBadge = document.getElementById('clone-soon-badge');
   if (cloneSoonTitle) cloneSoonTitle.textContent = isTR2
-    ? 'Bebeğin annenin sesiyle uyusun'
+    ? 'Bebeğin annesinin sesiyle uyusun'
     : 'Let your baby sleep in your voice';
   if (cloneSoonDesc) cloneSoonDesc.textContent = isTR2
     ? 'Kendi sesinle söylediğin ninnilerle bebeğin daha hızlı sakinleşsin ve huzurla uyusun'
@@ -362,6 +362,7 @@ window.updateLanguageUI = function() {
   updateCloneSection();
   renderExpertTips();
   if (typeof renderSleepStats === 'function') renderSleepStats();
+  if (typeof renderNightHistory === 'function') renderNightHistory();
   updatePremiumUI();
   updateTrialUI();
   updateOnboardingLanguage();
