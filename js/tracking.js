@@ -580,10 +580,9 @@ window.renderNightHistory = function() {
   }
 
   const shown = isPrem ? reports : reports.slice(0, 1);
-  list.innerHTML = shown.map((r, i) => _renderNightRow(r, isTR, i)).join('') +
-    (!isPrem ? `<div class="analysis-free-upgrade" onclick="showPremiumModal()" style="margin-top:8px">
-      👑 ${isTR ? "Tüm geçmiş için Premiyuma geçin" : "Upgrade to Premium for full history"}
-    </div>` : '');
+  const cards = shown.map((r, i) => _renderNightRow(r, isTR, i)).join('');
+  const upgrade = !isPrem ? '<div class="analysis-free-upgrade" onclick="showPremiumModal()" style="margin-top:8px">👑 '+(isTR?"Tüm geçmiş için Premiyuma geçin":"Upgrade to Premium for full history")+'</div>' : '';
+  list.innerHTML = '<div style="max-height:420px;overflow-y:auto;padding-right:4px">'+cards+'</div>'+upgrade;
 };
 
 window.showNightDetail = function(idx) {
