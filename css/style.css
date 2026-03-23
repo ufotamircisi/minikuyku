@@ -110,7 +110,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
+  flex-wrap: nowrap;
+  width: 100%;
+  max-width: 360px;
 }
 
 /* 👶 Bebek butonu */
@@ -118,17 +121,18 @@ body {
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.14);
   color: var(--text-muted);
-  padding: 8px 14px;
+  padding: 7px 11px;
   border-radius: 22px;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   font-family: inherit;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 .header-btn:hover {
   background: rgba(157,140,239,0.15);
@@ -636,3 +640,52 @@ body {
 .ob-actions { display: flex; gap: 8px; }
 .ghost-btn { flex: 1; padding: 13px; border-radius: var(--radius-md); border: 1px solid var(--border); background: transparent; color: var(--text-muted); font-family: inherit; font-size: 13px; cursor: pointer; transition: all var(--transition); }
 .ghost-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ══ HEADER OVERRIDE — mobilden düzeltme ══════════════════════ */
+.header {
+  flex-direction: column !important;
+  align-items: center !important;
+  padding: 20px 16px 12px !important;
+  gap: 12px !important;
+}
+.header-logo-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  gap: 10px !important;
+}
+.logo-moon {
+  font-size: 28px !important;
+  flex-shrink: 0 !important;
+}
+.logo-text {
+  font-family: 'Fredoka One', 'Baloo 2', cursive !important;
+  font-size: 20px !important;
+  font-weight: 400 !important;
+  background: linear-gradient(90deg, #ff85c0 0%, #c084fc 50%, #818cf8 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  white-space: nowrap !important;
+  filter: drop-shadow(0 0 10px rgba(192,132,252,0.4)) !important;
+}
+.header-btn-row {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-wrap: nowrap !important;
+  gap: 7px !important;
+  width: 100% !important;
+}
+.lang-toggle-pill {
+  display: flex !important;
+  flex-direction: row !important;
+  height: 34px !important;
+  border-radius: 22px !important;
+}
+.lang-chip {
+  display: flex !important;
+  flex-direction: row !important;
+}
