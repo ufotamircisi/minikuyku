@@ -14,8 +14,93 @@
   <title>Minik Uyku – LumiBaby</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Quicksand:wght@400;500;600;700&family=Baloo+2:wght@700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <style>
+    /* ── HEADER KESIN OVERRIDE ── */
+    .header {
+      position: relative !important;
+      z-index: 10 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 20px 16px 12px !important;
+      gap: 12px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    .header-logo-row {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 10px !important;
+      width: 100% !important;
+    }
+    .logo-moon {
+      font-size: 28px !important;
+      flex-shrink: 0 !important;
+      display: block !important;
+    }
+    .logo-text {
+      font-family: 'Fredoka One', cursive !important;
+      font-size: 21px !important;
+      font-weight: 400 !important;
+      background: linear-gradient(90deg, #ff85c0 0%, #c084fc 50%, #818cf8 100%) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      background-clip: text !important;
+      white-space: nowrap !important;
+      display: block !important;
+    }
+    .logo-subtext { display: none !important; }
+    .header-btn-row, .header-btns {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-wrap: nowrap !important;
+      gap: 7px !important;
+      width: 100% !important;
+      max-width: 360px !important;
+    }
+    .lang-toggle-pill {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      height: 34px !important;
+      border-radius: 22px !important;
+      background: rgba(255,255,255,0.06) !important;
+      border: 1px solid rgba(255,255,255,0.16) !important;
+      overflow: hidden !important;
+    }
+    .lang-chip {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      padding: 6px 13px !important;
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      color: rgba(255,255,255,0.45) !important;
+      background: transparent !important;
+      border: none !important;
+      cursor: pointer !important;
+      height: 100% !important;
+    }
+    .lang-chip.active {
+      background: rgba(157,140,239,0.2) !important;
+      color: #b8a8f8 !important;
+      border-radius: 20px !important;
+    }
+    .lang-divider {
+      width: 1px !important;
+      height: 55% !important;
+      background: rgba(255,255,255,0.15) !important;
+      flex-shrink: 0 !important;
+    }
+  </style>
 </head>
 <body>
 
