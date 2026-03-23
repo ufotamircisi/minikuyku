@@ -34,8 +34,11 @@
     <button class="header-btn" onclick="showSettings()">
       <span>👶</span> <span id="baby-name-display">Bebek</span>
     </button>
-    <button type="button" class="lang-chip active" id="lang-tr" onclick="setLanguage('tr')">TR</button>
-    <button type="button" class="lang-chip" id="lang-en" onclick="setLanguage('en')">EN</button>
+    <div class="lang-toggle-pill">
+      <button type="button" class="lang-chip active" id="lang-tr" onclick="setLanguage('tr')">TR</button>
+      <div class="lang-divider"></div>
+      <button type="button" class="lang-chip" id="lang-en" onclick="setLanguage('en')">EN</button>
+    </div>
     <button class="header-btn premium" onclick="showPremiumModal()" id="premium-btn">
       <span>👑</span> <span id="premium-text">Premium</span>
     </button>

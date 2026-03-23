@@ -21,6 +21,7 @@ window.stopAll = function() {
   if (state.audioContext) { try { state.audioContext.close(); } catch(e) {} state.audioContext = null; }
   if (window.speechSynthesis) window.speechSynthesis.cancel();
   if (state.progressInterval) { clearInterval(state.progressInterval); state.progressInterval = null; }
+  if (state._previewTimer) { clearTimeout(state._previewTimer); state._previewTimer = null; }
   state.isPlaying = false;
   state.currentTrack = null;
   document.querySelectorAll('.card').forEach(c => c.classList.remove('playing'));
@@ -55,7 +56,7 @@ window.updatePlayUI = function(id, cardPfx, btnPfx, playing) {
   if (btn)  { btn.innerHTML = playing ? '⏸' : '▶'; btn.classList.toggle('playing', playing); }
 };
 
-/* ── Ninni çal ───────────────────────────────────────────────── */
+/* ── Ninni çal — DÖNGÜ ───────────────────────────────────────── */
 let _lastLullabyCall = 0;
 window.playLullaby = async function(id) {
   const now = Date.now();
@@ -71,44 +72,52 @@ window.playLullaby = async function(id) {
   state.isPlaying = true;
   updatePlayUI(id, 'card-', 'btn-', true);
   showNowPlaying('ninniler', lullaby.emoji, lullaby.name, t('playing'));
+
   if (lullaby.file) {
-    const audio = new Audio(audioSrc(lullaby.file));
-    state.currentAudio = audio;
-    audio.onended = () => {
-      updatePlayUI(id, 'card-', 'btn-', false);
-      document.querySelectorAll('.now-playing').forEach(n => n.classList.remove('show'));
-      state.isPlaying = false; state.currentTrack = null;
+    // MP3 dosyası var — döngüde çal, komple ücretsiz
+    const playLoop = () => {
+      if (state.currentTrack !== id || !state.isPlaying) return;
+      const audio = new Audio(audioSrc(lullaby.file));
+      state.currentAudio = audio;
+      audio.onended = () => {
+        // Kullanıcı durdurmadıysa döngüye devam et
+        if (state.currentTrack === id && state.isPlaying) {
+          playLoop();
+        }
+      };
+      audio.onerror = () => {
+        // Ses dosyası yüklenemedi — ElevenLabs'a geç
+        state.currentAudio = null;
+        _lullabyElevenLoop(id, lullaby);
+      };
+      audio.play().catch(() => {
+        state.currentAudio = null;
+        _lullabyElevenLoop(id, lullaby);
+      });
     };
-    audio.onerror = () => {
-      updatePlayUI(id, 'card-', 'btn-', false);
-      state.isPlaying = false; state.currentTrack = null;
-      document.querySelectorAll('.now-playing').forEach(n => n.classList.remove('show'));
-    };
-    try {
-      await audio.play();
-      // Premium değilse 1 dakika sonra durdur
-      if (!hasAccess()) {
-        state._previewTimer = setTimeout(() => {
-          stopAll();
-          showPremiumPrompt();
-        }, 60000);
-      }
-    } catch(e) {
-      updatePlayUI(id, 'card-', 'btn-', false);
-      state.isPlaying = false; state.currentTrack = null;
-    }
+    playLoop();
     return;
   }
-  try {
-    await generateSpeech(injectBabyName(lullaby.text), id, 'ninniler');
-    if (!hasAccess()) {
-      state._previewTimer = setTimeout(() => { stopAll(); showPremiumPrompt(); }, 60000);
-    }
-  }
-  catch(e) { fallbackTTS(injectBabyName(lullaby.text)); }
+
+  // MP3 yok — ElevenLabs döngüsü
+  _lullabyElevenLoop(id, lullaby);
 };
 
-/* ── Hikaye çal ──────────────────────────────────────────────── */
+async function _lullabyElevenLoop(id, lullaby) {
+  if (state.currentTrack !== id || !state.isPlaying) return;
+  try {
+    await generateSpeech(injectBabyName(lullaby.text), id, 'ninniler', () => {
+      // onended callback — döngüye devam
+      if (state.currentTrack === id && state.isPlaying) {
+        _lullabyElevenLoop(id, lullaby);
+      }
+    });
+  } catch(e) {
+    fallbackTTS(injectBabyName(lullaby.text));
+  }
+}
+
+/* ── Hikaye çal — SIRAYLA DÖNGÜ ─────────────────────────────── */
 let _lastStoryCall = 0;
 window.playStory = async function(id) {
   const now = Date.now();
@@ -118,22 +127,41 @@ window.playStory = async function(id) {
   const wasId = state.currentTrack;
   stopAll();
   if (wasPlaying && wasId === 's'+id) return;
-  const story = getActiveStories().find(s => s.id === id);
+  _playStoryById(id);
+};
+
+async function _playStoryById(id) {
+  const stories = getActiveStories();
+  const story = stories.find(s => s.id === id);
   if (!story) return;
-  state.currentTrack = 's'+id;
+
+  state.currentTrack = 's' + id;
   state.isPlaying = true;
   showNowPlaying('hikayeler', story.emoji, story.title, t('storyPlaying'));
+
   const prefix = state.babyName
     ? state.babyName + ', ' + (state.language==='tr' ? 'sana bir masal anlatacağım. ' : 'I will tell you a bedtime story. ')
     : (state.language==='tr' ? 'Tatlım, sana bir masal anlatacağım. ' : 'Sweetheart, I will tell you a bedtime story. ');
   const text = prefix + story.text;
+
+  // Hikaye bitince sıradakini bul
+  const onStoryEnd = () => {
+    if (!state.isPlaying) return;
+    const idx = stories.findIndex(s => s.id === id);
+    const nextIdx = (idx + 1) % stories.length; // en son bitti → başa dön
+    const nextStory = stories[nextIdx];
+    if (nextStory) {
+      setTimeout(() => {
+        if (state.isPlaying) _playStoryById(nextStory.id);
+      }, 800);
+    }
+  };
+
   if (story.file) {
     const audio = new Audio(audioSrc(story.file));
     state.currentAudio = audio;
-    audio.onended = () => {
-      document.querySelectorAll('.now-playing').forEach(n => n.classList.remove('show'));
-      state.isPlaying = false; state.currentTrack = null;
-    };
+    audio.onended = onStoryEnd;
+    audio.onerror = () => { fallbackTTS(text); };
     try {
       await audio.play();
       if (!hasAccess()) {
@@ -142,14 +170,14 @@ window.playStory = async function(id) {
     } catch(e) { fallbackTTS(text); }
     return;
   }
+
   try {
-    await generateSpeech(text, 's'+id, 'hikayeler');
+    await generateSpeech(text, 's'+id, 'hikayeler', onStoryEnd);
     if (!hasAccess()) {
       state._previewTimer = setTimeout(() => { stopAll(); showPremiumPrompt(); }, 60000);
     }
-  }
-  catch(e) { fallbackTTS(text); }
-};
+  } catch(e) { fallbackTTS(text); }
+}
 
 /* ── Kolik çal ───────────────────────────────────────────────── */
 window.playKolik = async function(id) {
@@ -168,7 +196,6 @@ window.playKolik = async function(id) {
   if (kitem) kitem.classList.add('playing');
   if (kbtn)  { kbtn.innerHTML = '⏸'; kbtn.classList.add('playing'); }
   showNowPlaying('kolik', item.emoji, loc ? loc.name : item.name, t('playing'));
-  // Önce MP3 dene (sounds/ klasöründen), hata alınca Web Audio'ya geç
   if (item.file) {
     const audio = new Audio(audioSrc(item.file));
     state.currentAudio = audio;
@@ -201,7 +228,13 @@ window.playVoiceLullaby = async function(id) {
   state.currentTrack = 'v'+id; state.isPlaying = true;
   updatePlayUI(id, 'vcard-', 'vbtn-', true);
   showNowPlaying('ninniler', '🎙️', lullaby.name+' – '+t('voiceLabel'), t('playing'));
-  await generateSpeech(injectBabyName(lullaby.text), 'v'+id, 'ninniler');
+  const loop = async () => {
+    if (state.currentTrack !== 'v'+id || !state.isPlaying) return;
+    await generateSpeech(injectBabyName(lullaby.text), 'v'+id, 'ninniler', () => {
+      if (state.currentTrack === 'v'+id && state.isPlaying) loop();
+    });
+  };
+  loop();
 };
 
 /* ── İsim enjeksiyonu ────────────────────────────────────────── */
@@ -210,24 +243,30 @@ window.injectBabyName = function(text) {
   return text.replace(/bebeğim/gi, state.babyName+"'m").replace(/tatlım/gi, state.babyName);
 };
 
-/* ── ElevenLabs TTS ──────────────────────────────────────────── */
-window.generateSpeech = async function(text, trackId, page) {
+/* ── ElevenLabs TTS — onEnded callback destekli ─────────────── */
+window.generateSpeech = async function(text, trackId, page, onEnded) {
   const key = CONFIG.ELEVENLABS_API_KEY;
-  if (!key) { fallbackTTS(text); return; }
+  if (!key) { fallbackTTS(text); onEnded && onEnded(); return; }
   try {
     const res = await fetch('https://api.elevenlabs.io/v1/text-to-speech/'+CONFIG.DEFAULT_VOICE_ID+'/stream', {
       method:'POST',
       headers:{'xi-api-key':key,'Content-Type':'application/json'},
       body:JSON.stringify({text, model_id:'eleven_multilingual_v2', voice_settings:{stability:0.75,similarity_boost:0.75}})
     });
-    if (!res.ok) { fallbackTTS(text); return; }
+    if (!res.ok) { fallbackTTS(text); onEnded && onEnded(); return; }
     const blob = await res.blob();
     const url  = URL.createObjectURL(blob);
     const audio = new Audio(url);
     state.currentAudio = audio;
-    audio.onended = () => { URL.revokeObjectURL(url); state.isPlaying=false; state.currentTrack=null; document.querySelectorAll('.now-playing').forEach(n=>n.classList.remove('show')); };
+    audio.onended = () => {
+      URL.revokeObjectURL(url);
+      state.isPlaying = false;
+      state.currentTrack = null;
+      document.querySelectorAll('.now-playing').forEach(n=>n.classList.remove('show'));
+      onEnded && onEnded();
+    };
     await audio.play();
-  } catch(e) { fallbackTTS(text); }
+  } catch(e) { fallbackTTS(text); onEnded && onEnded(); }
 };
 
 /* ── Tarayıcı TTS ────────────────────────────────────────────── */
@@ -438,7 +477,6 @@ function _pispis(dest){
 window.startCryAnalysis = async function() {
   const isPrem = hasAccess() && state.isPremium;
   if (!hasAccess()) {
-    // Ücretsiz: günde 2 hak
     const today = new Date().toDateString();
     const usage = JSON.parse(localStorage.getItem('cry_analysis_usage') || '{"date":"","count":0}');
     if (usage.date !== today) { usage.date = today; usage.count = 0; }
@@ -503,7 +541,6 @@ function _renderCryResult(analysis){
   const isTR   = state.language === 'tr';
 
   if (isPrem) {
-    // Premium: yüzdelik dağılım + öneri
     const topReason = analysis[0];
     const tips = {
       tr: {
@@ -521,7 +558,6 @@ function _renderCryResult(analysis){
         poop:    'Check the diaper, there may be bloating.',
       }
     };
-    // Find tip by matching label to cryLabels
     const labels = t('cryLabels');
     const tipKey = Object.keys(labels).find(k => labels[k] === topReason?.label) || 'hunger';
     const tip = (isTR ? tips.tr : tips.en)[tipKey] || '';
@@ -535,7 +571,6 @@ function _renderCryResult(analysis){
       (tip ? `<div class="analysis-tip">💡 ${tip}</div>` : '') +
       `<div class="soft-note">${t('cryResultNote')}</div>`;
   } else {
-    // Ücretsiz: sadece liste (yüzde yok)
     el.innerHTML = `
       <div class="analysis-free-list">
         ${analysis.slice(0,3).map((item,i) => `
@@ -580,21 +615,15 @@ window.cancelTimer = function() {
 /* ── Dedektörler ─────────────────────────────────────────────── */
 window.toggleCryDetector = async function() {
   const btn = document.getElementById('cry-detector-btn');
-
-  // Zaten açıksa kapat
   if (state.cryDetector.active) {
     _stopDet('cryDetector');
     if (btn) btn.classList.remove('active');
     return;
   }
-
-  // Kolik açıksa kapat
   if (state.kolikDetector.active) {
     _stopDet('kolikDetector');
     document.getElementById('kolik-detector-btn')?.classList.remove('active');
   }
-
-  // Ücretsiz: günlük limit kontrolü
   const isPremium = hasAccess() && state.isPremium;
   if (!isPremium) {
     const today = new Date().toDateString();
@@ -610,7 +639,6 @@ window.toggleCryDetector = async function() {
     usage.count++;
     localStorage.setItem('cry_det_usage', JSON.stringify(usage));
   }
-
   try {
     const stream = await navigator.mediaDevices.getUserMedia({audio:true});
     const ctx    = new (window.AudioContext||window.webkitAudioContext)();
@@ -619,7 +647,6 @@ window.toggleCryDetector = async function() {
     const data = new Uint8Array(analyser.frequencyBinCount);
     let _cryDetected = false;
     let _playing     = false;
-
     state.cryDetector = { active:true, stream, context:ctx, analyser,
       interval: setInterval(() => {
         analyser.getByteFrequencyData(data);
@@ -627,35 +654,24 @@ window.toggleCryDetector = async function() {
         const avgMid  = averageArray(data.slice(18,60));
         const avgHigh = averageArray(data.slice(60,120));
         const isCrying = avgAll > 35 && avgMid > 30 && avgHigh > 20;
-
         if (isCrying && !_cryDetected && !state.isPlaying) {
-          _cryDetected = true;
-          _playing     = true;
-          // Gece oturumuna kaydet
+          _cryDetected = true; _playing = true;
           window.recordNightEvent && recordNightEvent('wake', { source: 'cry' });
           showToast(state.language==='tr'
             ? '🎙 Ağlama tespit edildi! Ninni başlıyor...'
             : '🎙 Crying detected! Starting lullaby...');
           setTimeout(() => { playLullaby('l1'); }, 500);
-
-          // Ücretsiz: 15 dk sonra kapanır, tekrar başlatmaz
           if (!isPremium) {
             setTimeout(() => {
               _stopDet('cryDetector');
               if (btn) btn.classList.remove('active');
-              showToast(state.language === 'tr'
-                ? '⏱ 15 dakikalık süreniz doldu.'
-                : '⏱ Your 15-minute session ended.');
+              showToast(state.language === 'tr' ? '⏱ 15 dakikalık süreniz doldu.' : '⏱ Your 15-minute session ended.');
             }, 15 * 60 * 1000);
           }
         } else if (!isCrying && _playing && !state.isPlaying) {
-          // Bebek sakinleşti → kaydet
           window.recordNightEvent && recordNightEvent('calm', { source: 'cry' });
-          _playing     = false;
-          _cryDetected = false;
-        } else if (!isCrying) {
-          _cryDetected = false;
-        }
+          _playing = false; _cryDetected = false;
+        } else if (!isCrying) { _cryDetected = false; }
       }, 1500)
     };
     if (btn) btn.classList.add('active');
@@ -664,20 +680,15 @@ window.toggleCryDetector = async function() {
 
 window.toggleKolikDetector = async function() {
   const btn = document.getElementById('kolik-detector-btn');
-
   if (state.kolikDetector.active) {
     _stopDet('kolikDetector');
     if (btn) btn.classList.remove('active');
     return;
   }
-
-  // Ağlama açıksa kapat
   if (state.cryDetector.active) {
     _stopDet('cryDetector');
     document.getElementById('cry-detector-btn')?.classList.remove('active');
   }
-
-  // Ücretsiz: günlük limit kontrolü
   const isPremium = hasAccess() && state.isPremium;
   if (!isPremium) {
     const today = new Date().toDateString();
@@ -693,7 +704,6 @@ window.toggleKolikDetector = async function() {
     usage.count++;
     localStorage.setItem('kolik_det_usage', JSON.stringify(usage));
   }
-
   try {
     const stream = await navigator.mediaDevices.getUserMedia({audio:true});
     const ctx    = new (window.AudioContext||window.webkitAudioContext)();
@@ -702,38 +712,28 @@ window.toggleKolikDetector = async function() {
     const data = new Uint8Array(analyser.frequencyBinCount);
     let _kolikDetected = false;
     let _playing       = false;
-
     state.kolikDetector = { active:true, stream, context:ctx, analyser,
       interval: setInterval(() => {
         analyser.getByteFrequencyData(data);
         const avgAll  = averageArray(data);
         const avgHigh = averageArray(data.slice(60,120));
         const isKolik = avgAll > 40 && avgHigh > 35;
-
         if (isKolik && !_kolikDetected && !state.isPlaying) {
-          _kolikDetected = true;
-          _playing       = true;
+          _kolikDetected = true; _playing = true;
           showToast(state.language==='tr'
-            ? '🌿 Kolik tespit edildi! Beyaz gurultu basliyor...'
+            ? '🌿 Kolik tespit edildi! Beyaz gürültü başlıyor...'
             : '🌿 Colic detected! Starting white noise...');
           setTimeout(() => { playKolik('b3'); }, 500);
-
-          // Ücretsiz: 15 dk sonra kapanır
           if (!isPremium) {
             setTimeout(() => {
               _stopDet('kolikDetector');
               if (btn) btn.classList.remove('active');
-              showToast(state.language === 'tr'
-                ? '⏱ 15 dakikalık süreniz doldu.'
-                : '⏱ Your 15-minute session ended.');
+              showToast(state.language === 'tr' ? '⏱ 15 dakikalık süreniz doldu.' : '⏱ Your 15-minute session ended.');
             }, 15 * 60 * 1000);
           }
         } else if (!isKolik && _playing && !state.isPlaying) {
-          _playing       = false;
-          _kolikDetected = false;
-        } else if (!isKolik) {
-          _kolikDetected = false;
-        }
+          _playing = false; _kolikDetected = false;
+        } else if (!isKolik) { _kolikDetected = false; }
       }, 2000)
     };
     if (btn) btn.classList.add('active');
