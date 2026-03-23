@@ -86,40 +86,23 @@ body {
 }
 
 .logo-moon {
-  font-size: 32px;
+  font-size: 28px;
   animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(255,180,220,.6));
 }
-@keyframes float { 0%,100%{transform:translateY(0) rotate(-5deg)} 50%{transform:translateY(-6px) rotate(5deg)} }
-
-.logo-stack {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.1;
-  gap: 1px;
-}
+@keyframes float { 0%,100%{transform:translateY(0) rotate(-5deg)} 50%{transform:translateY(-5px) rotate(5deg)} }
 
 .logo-text {
-  font-family: 'Baloo 2', 'Quicksand', cursive;
-  font-size: 24px;
-  font-weight: 800;
-  background: linear-gradient(135deg, #ffffff 0%, #c4b5fd 50%, #93c5fd 100%);
+  font-family: 'Fredoka One', 'Baloo 2', 'Quicksand', cursive;
+  font-size: 22px;
+  font-weight: 600;
+  background: linear-gradient(90deg, #ff85c0 0%, #c084fc 50%, #818cf8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  letter-spacing: 0.3px;
-  text-shadow: none;
-}
-
-.logo-subtext {
-  font-family: 'Baloo 2', 'Quicksand', cursive;
-  font-size: 14px;
-  font-weight: 700;
-  background: linear-gradient(135deg, #f0c060 0%, #5dd8a8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  filter: drop-shadow(0 0 12px rgba(192,132,252,.45));
+  white-space: nowrap;
 }
 
 /* Buton satırı — ortada üç buton */
@@ -153,21 +136,20 @@ body {
   color: var(--accent-light);
 }
 
-/* Dil seçici — TR | EN pill */
 .lang-toggle-pill {
   display: flex;
   align-items: center;
   background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.16);
   border-radius: 22px;
   overflow: hidden;
-  height: 36px;
+  height: 34px;
 }
 .lang-chip {
   padding: 6px 13px;
   font-size: 12px;
   font-weight: 700;
-  color: var(--text-muted);
+  color: rgba(255,255,255,0.45);
   cursor: pointer;
   font-family: inherit;
   background: transparent;
@@ -176,15 +158,18 @@ body {
   height: 100%;
   display: flex;
   align-items: center;
+  letter-spacing: 0.3px;
 }
 .lang-chip.active {
-  background: rgba(157,140,239,0.25);
-  color: var(--accent-light);
+  background: rgba(157,140,239,0.15);
+  border: 1px solid rgba(157,140,239,0.38);
+  color: #b8a8f8;
   border-radius: 20px;
+  font-weight: 700;
 }
 .lang-divider {
   width: 1px;
-  height: 60%;
+  height: 55%;
   background: rgba(255,255,255,0.15);
 }
 
